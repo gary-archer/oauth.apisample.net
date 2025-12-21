@@ -3,7 +3,6 @@ namespace FinalApi.Plumbing.Middleware
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Configuration;
     using FinalApi.Plumbing.Errors;
-    using FinalApi.Plumbing.Logging;
     using FinalApi.Plumbing.Utilities;
     using Microsoft.AspNetCore.Http;
 
@@ -39,14 +38,6 @@ namespace FinalApi.Plumbing.Middleware
 
             // Run subsequent handlers including the controller operation
             await this.next(context);
-
-            // Add the session ID to response headers so that the frontend can read and display it
-            var logEntry = (LogEntry)context.RequestServices.GetService(typeof(ILogEntry));
-            var sessionId = logEntry.GetSessionId();
-            if (!string.IsNullOrWhiteSpace(sessionId))
-            {
-                // context.Response.Headers["session-id"] = sessionId;
-            }
         }
     }
 }
