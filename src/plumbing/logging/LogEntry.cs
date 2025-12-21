@@ -66,7 +66,7 @@ namespace FinalApi.Plumbing.Logging
         /*
          * Add identity details
          */
-        public void SetIdentity(IdentityLogData data)
+        public void SetIdentityData(IdentityLogData data)
         {
             this.data.UserId = data.UserId;
             this.data.ClientId = data.ClientId;

@@ -66,7 +66,7 @@ namespace FinalApi.Plumbing.OAuth
                 var claims = new JwtClaims(claimsJson);
 
                 // Set identity data to log
-                this.logEntry.SetIdentity(this.GetIdentityData(claims));
+                this.logEntry.SetIdentityData(this.GetIdentityData(claims));
 
                 // Verify the protocol claims according to best practices
                 this.ValidateProtocolClaims(claims);
