@@ -5,12 +5,9 @@ namespace FinalApi.Plumbing.Middleware
     using System.Linq;
     using System.Net;
     using System.Text.Encodings.Web;
-    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
-    using FinalApi.Plumbing.Claims;
     using FinalApi.Plumbing.Configuration;
     using FinalApi.Plumbing.Errors;
-    using FinalApi.Plumbing.Logging;
     using FinalApi.Plumbing.OAuth;
     using FinalApi.Plumbing.Utilities;
     using Microsoft.AspNetCore.Authentication;
@@ -43,20 +40,9 @@ namespace FinalApi.Plumbing.Middleware
                 var oauthFilter = (OAuthFilter)this.Context.RequestServices.GetService(typeof(OAuthFilter));
                 var claimsPrincipal = await oauthFilter.ExecuteAsync(this.Request);
 
-                // Include selected token details in audit logs
-                var userId = claimsPrincipal.Jwt.Sub;
-                var scope = claimsPrincipal.Jwt.Scope.Split(" ").ToList();
-                var loggedClaims = new JsonObject
-                {
-                    ["managerId"] = claimsPrincipal.Jwt.GetStringClaim(ClaimNames.ManagerId),
-                    ["role"] = claimsPrincipal.Jwt.GetStringClaim(ClaimNames.Role),
-                };
-
-                var logEntry = (LogEntry)this.Context.RequestServices.GetService(typeof(ILogEntry));
-                logEntry.SetIdentity(userId, scope, loggedClaims);
-
                 // The sample API requires the same scope for all endpoints, and it is enforced here
                 var oauthConfiguration = (OAuthConfiguration)this.Context.RequestServices.GetService(typeof(OAuthConfiguration));
+                var scope = claimsPrincipal.Jwt.Scope.Split(" ").ToList();
                 if (!scope.Contains(oauthConfiguration.Scope))
                 {
                     throw ErrorFactory.CreateClientError(

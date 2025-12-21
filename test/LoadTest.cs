@@ -40,7 +40,7 @@ namespace FinalApi.Test
             // Create the API client
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
             this.sessionId = Guid.NewGuid().ToString();
-            this.apiClient = new ApiClient(apiBaseUrl, "LoadTest", this.sessionId, useProxy);
+            this.apiClient = new ApiClient(apiBaseUrl, useProxy);
 
             // Initialise other fields
             this.totalCount = 0;
@@ -102,6 +102,7 @@ namespace FinalApi.Test
         {
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
+            jwtOptions.DelegationId = this.sessionId;
 
             var tokens = new List<string>();
             for (int index = 0; index < 5; index++)
@@ -236,12 +237,12 @@ namespace FinalApi.Test
                 if (statusCode >= 200 && statusCode <= 299)
                 {
                     // Report successful requests
-                    this.OutputMessage(colorGreen, this.FormatMetrics(response));
+                    this.OutputMessage(colorGreen, this.ProcessMetrics(response));
                 }
                 else
                 {
                     // Report failed requests, some of which are expected
-                    this.OutputMessage(colorRed, this.FormatMetrics(response));
+                    this.OutputMessage(colorRed, this.ProcessMetrics(response));
                     this.errorCount++;
                 }
 
@@ -252,9 +253,9 @@ namespace FinalApi.Test
         }
 
         /*
-         * Get metrics as a table row
+         * Process metrics as a table row
          */
-        private string FormatMetrics(ApiResponse response)
+        private string ProcessMetrics(ApiResponse response)
         {
             var errorCode = string.Empty;
             var errorId = string.Empty;

@@ -10,7 +10,12 @@
         // Create a performance breakdown
         IPerformanceBreakdown CreatePerformanceBreakdown(string name);
 
+        // Add identity data
+        void SetIdentity(IdentityLogData data);
+
         // Add arbitrary data
         void AddInfo(JsonNode info);
+
+        string GetSessionId();
     }
 }

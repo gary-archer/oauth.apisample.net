@@ -2,6 +2,7 @@ namespace FinalApi.Plumbing.OAuth
 {
     using System;
     using System.Linq;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Claims;
     using FinalApi.Plumbing.Configuration;
@@ -64,6 +65,9 @@ namespace FinalApi.Plumbing.OAuth
                 // Save to a claims object
                 var claims = new JwtClaims(claimsJson);
 
+                // Set identity data to log
+                this.logEntry.SetIdentity(this.GetIdentityData(claims));
+
                 // Verify the protocol claims according to best practices
                 this.ValidateProtocolClaims(claims);
                 return claims;
@@ -82,6 +86,24 @@ namespace FinalApi.Plumbing.OAuth
             }
 
             return null;
+        }
+
+        /*
+        * Collect identity data to add to logs
+        */
+        private IdentityLogData GetIdentityData(JwtClaims claims)
+        {
+            var data = new IdentityLogData();
+            data.UserId = claims.GetStringClaim(ClaimNames.Subject);
+            data.SessionId = claims.GetStringClaim(this.configuration.SessionIDClaimName);
+            data.ClientId = claims.GetStringClaim(ClaimNames.ClientId);
+            data.Scope = claims.GetStringClaim(ClaimNames.Scope);
+            data.Claims = new JsonObject
+            {
+                ["managerId"] = claims.GetStringClaim(ClaimNames.ManagerId),
+                ["role"] = claims.GetStringClaim(ClaimNames.Role),
+            };
+            return data;
         }
 
         /*

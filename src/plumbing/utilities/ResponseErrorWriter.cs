@@ -1,6 +1,5 @@
 namespace FinalApi.Plumbing.Utilities
 {
-    using System;
     using System.Net;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Errors;

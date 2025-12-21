@@ -13,6 +13,8 @@
 
         public static readonly string InsufficientScope = "insufficient_scope";
 
+        public static readonly string InsufficientData = "insufficient_data";
+
         public static readonly string ExceptionSimulation = "exception_simulation";
     }
 }

@@ -9,6 +9,7 @@ namespace FinalApi.Plumbing.Claims
         public static readonly string Issuer = "iss";
         public static readonly string Audience = "aud";
         public static readonly string Scope = "scope";
+        public static readonly string ClientId = "client_id";
         public static readonly string Exp = "exp";
         public static readonly string Subject = "sub";
 

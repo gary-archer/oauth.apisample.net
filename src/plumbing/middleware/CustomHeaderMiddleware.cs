@@ -3,11 +3,12 @@ namespace FinalApi.Plumbing.Middleware
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Configuration;
     using FinalApi.Plumbing.Errors;
+    using FinalApi.Plumbing.Logging;
     using FinalApi.Plumbing.Utilities;
     using Microsoft.AspNetCore.Http;
 
     /*
-     * A class to process custom headers to enable testers to control non functional behaviour
+     * A class to handle custom header logic
      */
     public sealed class CustomHeaderMiddleware
     {
@@ -27,7 +28,7 @@ namespace FinalApi.Plumbing.Middleware
         public async Task Invoke(HttpContext context, LoggingConfiguration configuration)
         {
             // Cause a 500 error if a special header is received
-            var apiToBreak = context.Request.GetHeader("authsamples-test-exception");
+            var apiToBreak = context.Request.GetHeader("api-exception-simulation");
             if (!string.IsNullOrWhiteSpace(apiToBreak))
             {
                 if (apiToBreak.ToLowerInvariant() == configuration.ApiName.ToLowerInvariant())
@@ -38,6 +39,14 @@ namespace FinalApi.Plumbing.Middleware
 
             // Run subsequent handlers including the controller operation
             await this.next(context);
+
+            // Add the session ID to response headers so that the frontend can read and display it
+            var logEntry = context.RequestServices.GetService(typeof(ILogEntry));
+            var sessionId = logEntry.GetSessionId();
+            if (sessionId)
+            {
+                context.Response.Headers["session-id"] = sessionId;
+            }
         }
     }
 }

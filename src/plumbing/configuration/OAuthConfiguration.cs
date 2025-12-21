@@ -20,6 +20,9 @@ namespace FinalApi.Plumbing.Configuration
         // The endpoint from which to download the token signing public key
         public string JwksEndpoint { get; set; }
 
+        // The access token claim that the API uses as a session ID
+        public string SessionIDClaimName { get; set; }
+
         // Optional claims caching configuration
         public int ClaimsCacheTimeToLiveMinutes { get; set; }
     }

@@ -10,6 +10,7 @@ namespace FinalApi.Test.Utils
             this.Issuer = "https://login.authsamples-dev.com";
             this.Audience = "api.authsamples.com";
             this.Scope = "openid profile investments";
+            this.DelegationId = string.Empty;
             this.Role = string.Empty;
             this.ExpiryMinutes = 15;
             this.Subject = string.Empty;
@@ -21,6 +22,10 @@ namespace FinalApi.Test.Utils
         public string Audience { get; set; }
 
         public string Scope { get; set; }
+
+        public string DelegationId { get; set; }
+
+        public string ClientId { get; set; }
 
         public string Role { get; set; }
 
