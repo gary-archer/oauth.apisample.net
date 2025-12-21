@@ -79,7 +79,7 @@ namespace FinalApi.Plumbing.OAuth
                     }
 
                     // Do the same for my expired access token testing, which causes invalid signatures
-                    if (ex is IntegrityException || (claims != null && this.IsExpired(claims)))
+                    if (ex is IntegrityException)
                     {
                         claimsJson = JWT.Payload(accessToken);
                         claims = new JwtClaims(claimsJson);
