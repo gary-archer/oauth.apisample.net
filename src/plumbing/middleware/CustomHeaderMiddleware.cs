@@ -41,11 +41,11 @@ namespace FinalApi.Plumbing.Middleware
             await this.next(context);
 
             // Add the session ID to response headers so that the frontend can read and display it
-            var logEntry = context.RequestServices.GetService(typeof(ILogEntry));
+            var logEntry = (LogEntry)context.RequestServices.GetService(typeof(ILogEntry));
             var sessionId = logEntry.GetSessionId();
-            if (sessionId)
+            if (!string.IsNullOrWhiteSpace(sessionId))
             {
-                context.Response.Headers["session-id"] = sessionId;
+                // context.Response.Headers["session-id"] = sessionId;
             }
         }
     }

@@ -104,7 +104,7 @@
                 System.Net.HttpStatusCode.BadRequest,
                 BaseErrorCodes.InsufficientData,
                 "The token does not contain sufficient data for this API",
-                $"Missing claim in input: '{claimName}'");
+                $"Missing claim in input: {claimName}");
         }
 
         /*

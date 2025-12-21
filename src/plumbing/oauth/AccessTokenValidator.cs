@@ -17,7 +17,7 @@ namespace FinalApi.Plumbing.OAuth
     {
         private readonly OAuthConfiguration configuration;
         private readonly JsonWebKeyResolver jsonWebKeyResolver;
-        private readonly ILogEntry logEntry;
+        private readonly LogEntry logEntry;
 
         public AccessTokenValidator(
             OAuthConfiguration configuration,
@@ -26,7 +26,7 @@ namespace FinalApi.Plumbing.OAuth
         {
             this.configuration = configuration;
             this.jsonWebKeyResolver = jsonWebKeyResolver;
-            this.logEntry = logEntry;
+            this.logEntry = (LogEntry)logEntry;
         }
 
         /*

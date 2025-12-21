@@ -20,8 +20,8 @@ namespace FinalApi.IntegrationTests
 
             // Create the API client
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
-            var sessionId = Guid.NewGuid().ToString();
             this.ApiClient = new ApiClient(apiBaseUrl, useProxy);
+            this.SessionId = Guid.NewGuid().ToString();
         }
 
         // Wiremock and a JOSE library act as the mock authorization server
@@ -32,7 +32,6 @@ namespace FinalApi.IntegrationTests
 
         // The test session ID
         public string SessionId { get; private set; }
-
 
         /*
          * Destroy infrastructure resources when the test run ends
