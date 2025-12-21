@@ -1,7 +1,12 @@
 namespace FinalApi.Plumbing.OAuth
 {
     using System;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Diagnostics;
+    using System.IO.Compression;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Claims;
@@ -36,7 +41,8 @@ namespace FinalApi.Plumbing.OAuth
         {
             using (this.logEntry.CreatePerformanceBreakdown("tokenValidator"))
             {
-                var claimsJson = string.Empty;
+                JwtClaims claims = null;
+                string claimsJson = string.Empty;
                 try
                 {
                     // Read the token without validating it, to get its key identifier
@@ -56,20 +62,34 @@ namespace FinalApi.Plumbing.OAuth
 
                     // Do the cryptographic validation of the JWT signature using the JWK public key
                     claimsJson = JWT.Decode(accessToken, jwk);
+                    claims = new JwtClaims(claimsJson);
+
+                    // Verify the protocol claims according to best practices
+                    this.ValidateProtocolClaims(claims);
+
+                    // Add identity data to logs
+                    this.logEntry.SetIdentityData(this.GetIdentityData(claims));
                 }
                 catch (Exception ex)
                 {
+                    // For expired access tokens, add identity data to logs
+                    if (claims != null && this.IsExpired(claims))
+                    {
+                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
+                    }
+
+                    // Do the same for my expired access token testing, which causes invalid signatures
+                    if (ex is IntegrityException || (claims != null && this.IsExpired(claims)))
+                    {
+                        claimsJson = JWT.Payload(accessToken);
+                        claims = new JwtClaims(claimsJson);
+                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
+                    }
+
+                    // Otherwise return a 401 error
                     throw ErrorUtils.FromTokenValidationError(ex);
                 }
 
-                // Save to a claims object
-                var claims = new JwtClaims(claimsJson);
-
-                // Set identity data to log
-                this.logEntry.SetIdentityData(this.GetIdentityData(claims));
-
-                // Verify the protocol claims according to best practices
-                this.ValidateProtocolClaims(claims);
                 return claims;
             }
         }
@@ -128,10 +148,18 @@ namespace FinalApi.Plumbing.OAuth
             }
 
             // Check that the JWT is not expired
-            if (claims.Exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            if (this.IsExpired(claims))
             {
                 throw ErrorFactory.CreateClient401Error("The access token is expired");
             }
+        }
+
+        /*
+         * See if the token has already expired
+         */
+        private bool IsExpired(JwtClaims claims)
+        {
+            return claims.Exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }
