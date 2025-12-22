@@ -113,16 +113,19 @@ namespace FinalApi.Plumbing.OAuth
         */
         private IdentityLogData GetIdentityData(JwtClaims claims)
         {
-            var data = new IdentityLogData();
-            data.UserId = claims.GetStringClaim(ClaimNames.Subject);
-            data.SessionId = claims.GetStringClaim(this.configuration.SessionIDClaimName);
-            data.ClientId = claims.GetStringClaim(ClaimNames.ClientId);
-            data.Scope = claims.GetStringClaim(ClaimNames.Scope);
-            data.Claims = new JsonObject
+            var data = new IdentityLogData()
             {
-                ["managerId"] = claims.GetStringClaim(ClaimNames.ManagerId),
-                ["role"] = claims.GetStringClaim(ClaimNames.Role),
+                UserId = claims.GetStringClaim(ClaimNames.Subject),
+                SessionId = claims.GetStringClaim(this.configuration.SessionIDClaimName),
+                ClientId = claims.GetStringClaim(ClaimNames.ClientId),
+                Scope = claims.GetStringClaim(ClaimNames.Scope),
+                Claims = new JsonObject
+                {
+                    ["managerId"] = claims.GetStringClaim(ClaimNames.ManagerId),
+                    ["role"] = claims.GetStringClaim(ClaimNames.Role),
+                },
             };
+
             return data;
         }
 

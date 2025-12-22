@@ -12,7 +12,7 @@ namespace FinalApi.Plumbing.Utilities
          */
         public static string Sanitize(string input)
         {
-            if (new Regex(@"/^[a-z0-9-]+$/i").IsMatch(input))
+            if (new Regex(@"^[a-zA-Z0-9-]+$").IsMatch(input))
             {
                 return input;
             }
