@@ -79,7 +79,8 @@ namespace FinalApi.Plumbing.OAuth
                         this.logEntry.SetIdentityData(this.GetIdentityData(claims));
                     }
 
-                    // Do the same for my expired access token testing, which causes invalid signatures
+                    // My expiry testing adds extra characters to JWTs to cause 401 errors and simulate expiry over time.
+                    // That results in signature validation errors, which I treat as expiry to demonstrate the desired logging.
                     if (ex is IntegrityException)
                     {
                         claimsJson = JWT.Payload(accessToken);

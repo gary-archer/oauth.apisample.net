@@ -25,8 +25,6 @@ namespace FinalApi.Test.Utils
 
         public string DelegationId { get; set; }
 
-        public string ClientId { get; set; }
-
         public string Role { get; set; }
 
         public int ExpiryMinutes { get; set; }
