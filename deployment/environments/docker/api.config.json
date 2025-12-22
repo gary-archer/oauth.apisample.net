@@ -45,7 +45,7 @@
     "algorithm":                    "RS256",
     "scope":                        "investments",
     "jwksEndpoint":                 "https://login.authsamples-dev.com:447/.well-known/jwks.json",
-    "sessionIdClaimName":           "origin_jti",
+    "delegationIdClaimName":           "origin_jti",
     "claimsCacheTimeToLiveMinutes": 15
   }
 }

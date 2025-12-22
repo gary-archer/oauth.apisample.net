@@ -12,13 +12,11 @@ namespace FinalApi.Test.Utils
     public sealed class ApiClient
     {
         private readonly string baseUrl;
-        private readonly string sessionId;
         private readonly HttpProxy httpProxy;
 
         public ApiClient(string baseUrl, bool useProxy)
         {
             this.baseUrl = baseUrl;
-            this.sessionId = Guid.NewGuid().ToString();
             this.httpProxy = new HttpProxy(useProxy, "http://127.0.0.1:8888");
         }
 

@@ -23,7 +23,7 @@ namespace FinalApi.Test
         // Private class members
         private readonly MockAuthorizationServer mockAuthorizationServer;
         private readonly ApiClient apiClient;
-        private readonly string sessionId;
+        private readonly string delegationId;
         private int totalCount;
         private int errorCount;
 
@@ -39,8 +39,10 @@ namespace FinalApi.Test
 
             // Create the API client
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
-            this.sessionId = Guid.NewGuid().ToString();
             this.apiClient = new ApiClient(apiBaseUrl, useProxy);
+
+            // Create a mock delegation ID for testing, which would originate from the ID token
+            this.delegationId = Guid.NewGuid().ToString();
 
             // Initialise other fields
             this.totalCount = 0;
@@ -66,7 +68,7 @@ namespace FinalApi.Test
             // Show a startup message
             Console.WriteLine();
             var startTime = DateTime.UtcNow;
-            this.OutputMessage(colorBlue, $"Load test session {this.sessionId} starting at {startTime.ToString("s")}");
+            this.OutputMessage(colorBlue, $"Load test session {this.delegationId} starting at {startTime.ToString("s")}");
 
             // Show headings for API requests
             string[] headings =
@@ -91,7 +93,7 @@ namespace FinalApi.Test
             var timeTaken = (endTime - startTime).TotalMilliseconds;
             this.OutputMessage(
                 colorBlue,
-                $"Load test session {this.sessionId} completed in {timeTaken} milliseconds: {this.errorCount} errors from {this.totalCount} requests");
+                $"Load test session {this.delegationId} completed in {timeTaken} milliseconds: {this.errorCount} errors from {this.totalCount} requests");
             Console.WriteLine();
         }
 
@@ -102,7 +104,7 @@ namespace FinalApi.Test
         {
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.sessionId;
+            jwtOptions.DelegationId = this.delegationId;
 
             var tokens = new List<string>();
             for (int index = 0; index < 5; index++)

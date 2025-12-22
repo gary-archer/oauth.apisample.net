@@ -118,7 +118,7 @@ namespace FinalApi.Plumbing.OAuth
             var data = new IdentityLogData()
             {
                 UserId = ClaimsReader.GetStringClaim(claims, ClaimNames.Subject, false),
-                SessionId = ClaimsReader.GetStringClaim(claims, this.configuration.SessionIDClaimName, false),
+                DelegationId = ClaimsReader.GetStringClaim(claims, this.configuration.DelegationIDClaimName, false),
                 ClientId = ClaimsReader.GetStringClaim(claims, ClaimNames.ClientId, false),
                 Scope = ClaimsReader.GetStringClaim(claims, ClaimNames.Scope, false),
                 Claims = new JsonObject

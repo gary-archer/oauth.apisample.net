@@ -9,7 +9,7 @@ namespace FinalApi.Plumbing.Logging
     {
         public string UserId { get; set; }
 
-        public string SessionId { get; set; }
+        public string DelegationId { get; set; }
 
         public string ClientId { get; set; }
 

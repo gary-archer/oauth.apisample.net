@@ -70,7 +70,7 @@ namespace FinalApi.Plumbing.Logging
         {
             this.data.UserId = data.UserId;
             this.data.ClientId = data.ClientId;
-            this.data.SessionId = data.SessionId;
+            this.data.SessionId = data.DelegationId;
             this.data.Scope = data.Scope;
             this.data.Claims = data.Claims;
         }

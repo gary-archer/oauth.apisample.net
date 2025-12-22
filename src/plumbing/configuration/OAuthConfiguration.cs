@@ -21,7 +21,7 @@ namespace FinalApi.Plumbing.Configuration
         public string JwksEndpoint { get; set; }
 
         // The access token claim that the API uses as a session ID
-        public string SessionIDClaimName { get; set; }
+        public string DelegationIDClaimName { get; set; }
 
         // Optional claims caching configuration
         public int ClaimsCacheTimeToLiveMinutes { get; set; }

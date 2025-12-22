@@ -59,7 +59,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             jwtOptions.ExpiryMinutes = -30;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
@@ -85,7 +85,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             jwtOptions.Issuer = "https://otherissuer.com";
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
@@ -111,7 +111,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             jwtOptions.Audience = "api.other.com";
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
@@ -140,7 +140,7 @@ namespace FinalApi.IntegrationTests
                 var jwk = new Jwk(keypair, true);
                 var jwtOptions = new MockTokenOptions();
                 jwtOptions.UseStandardUser();
-                jwtOptions.DelegationId = this.state.SessionId;
+                jwtOptions.DelegationId = this.state.DelegationId;
                 var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions, jwk);
 
                 // Call the API and ensure a 401 response
@@ -166,7 +166,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             jwtOptions.Scope = "openid profile";
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
@@ -192,7 +192,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -218,7 +218,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -244,7 +244,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseAdminUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -269,7 +269,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -293,7 +293,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseAdminUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -317,7 +317,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
@@ -342,7 +342,7 @@ namespace FinalApi.IntegrationTests
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.SessionId;
+            jwtOptions.DelegationId = this.state.DelegationId;
             var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
