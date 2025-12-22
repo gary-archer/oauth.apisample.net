@@ -41,7 +41,7 @@ namespace FinalApi.Test
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
             this.apiClient = new ApiClient(apiBaseUrl, useProxy);
 
-            // Create a mock delegation ID for testing, which would originate from the ID token
+            // Create a mock delegation ID for testing
             this.delegationId = Guid.NewGuid().ToString();
 
             // Initialise other fields

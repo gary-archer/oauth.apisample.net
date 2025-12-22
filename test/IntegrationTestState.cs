@@ -21,6 +21,8 @@ namespace FinalApi.IntegrationTests
             // Create the API client
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
             this.ApiClient = new ApiClient(apiBaseUrl, useProxy);
+
+            // Create a lock delegation ID for testing
             this.DelegationId = Guid.NewGuid().ToString();
         }
 
