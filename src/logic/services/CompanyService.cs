@@ -56,7 +56,7 @@ namespace FinalApi.Logic.Services
         private bool IsUserAuthorizedForCompany(Company company)
         {
             // The admin role is granted access to all resources
-            var role = this.claims.Jwt.GetStringClaim(ClaimNames.Role).ToLowerInvariant();
+            var role = ClaimsReader.GetStringClaim(this.claims.Jwt, ClaimNames.Role).ToLowerInvariant();
             if (role == "admin")
             {
                 return true;

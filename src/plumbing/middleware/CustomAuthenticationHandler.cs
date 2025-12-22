@@ -6,6 +6,7 @@ namespace FinalApi.Plumbing.Middleware
     using System.Net;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
+    using FinalApi.Plumbing.Claims;
     using FinalApi.Plumbing.Configuration;
     using FinalApi.Plumbing.Errors;
     using FinalApi.Plumbing.OAuth;
@@ -42,8 +43,8 @@ namespace FinalApi.Plumbing.Middleware
 
                 // The sample API requires the same scope for all endpoints, and it is enforced here
                 var oauthConfiguration = (OAuthConfiguration)this.Context.RequestServices.GetService(typeof(OAuthConfiguration));
-                var scope = claimsPrincipal.Jwt.Scope.Split(" ").ToList();
-                if (!scope.Contains(oauthConfiguration.Scope))
+                var receivedScopes = ClaimsReader.GetStringClaim(claimsPrincipal.Jwt, ClaimNames.Scope).Split(" ").ToList();
+                if (!receivedScopes.Contains(oauthConfiguration.Scope))
                 {
                     throw ErrorFactory.CreateClientError(
                         HttpStatusCode.Forbidden,

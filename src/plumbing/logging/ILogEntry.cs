@@ -1,5 +1,7 @@
 ﻿namespace FinalApi.Plumbing.Logging
 {
+    using System.Text.Json.Nodes;
+
     /*
      * A log entry collects data during an API request and outputs it at the end
      */
@@ -8,6 +10,7 @@
         // Create a performance breakdown
         IPerformanceBreakdown CreatePerformanceBreakdown(string name);
 
-        string GetSessionId();
+        // Add arbitrary data
+        void AddInfo(JsonNode info);
     }
 }

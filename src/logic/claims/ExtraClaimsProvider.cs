@@ -20,7 +20,7 @@ namespace FinalApi.Logic.Claims
             var userRepository = (UserRepository)serviceProvider.GetService(typeof(UserRepository));
 
             // Look up values using the manager ID, a business user identity
-            var managerId = jwtClaims.GetStringClaim(ClaimNames.ManagerId);
+            var managerId = ClaimsReader.GetStringClaim(jwtClaims, ClaimNames.ManagerId);
             return userRepository.GetUserInfoForManagerId(managerId);
         }
         #pragma warning restore 1998

@@ -7,6 +7,7 @@ namespace FinalApi.Plumbing.OAuth
     using System.IO.Compression;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Security.Claims;
     using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Claims;
@@ -115,14 +116,14 @@ namespace FinalApi.Plumbing.OAuth
         {
             var data = new IdentityLogData()
             {
-                UserId = claims.GetStringClaim(ClaimNames.Subject),
-                SessionId = claims.GetStringClaim(this.configuration.SessionIDClaimName),
-                ClientId = claims.GetStringClaim(ClaimNames.ClientId),
-                Scope = claims.GetStringClaim(ClaimNames.Scope),
+                UserId = ClaimsReader.GetStringClaim(claims, ClaimNames.Subject, false),
+                SessionId = ClaimsReader.GetStringClaim(claims, this.configuration.SessionIDClaimName, false),
+                ClientId = ClaimsReader.GetStringClaim(claims, ClaimNames.ClientId, false),
+                Scope = ClaimsReader.GetStringClaim(claims, ClaimNames.Scope, false),
                 Claims = new JsonObject
                 {
-                    ["managerId"] = claims.GetStringClaim(ClaimNames.ManagerId),
-                    ["role"] = claims.GetStringClaim(ClaimNames.Role),
+                    ["managerId"] = ClaimsReader.GetStringClaim(claims, ClaimNames.ManagerId, false),
+                    ["role"] = ClaimsReader.GetStringClaim(claims, ClaimNames.Role, false),
                 },
             };
 
@@ -135,7 +136,8 @@ namespace FinalApi.Plumbing.OAuth
         private void ValidateProtocolClaims(JwtClaims claims)
         {
             // Check the expected issuer
-            if (claims.Iss != this.configuration.Issuer)
+            var issuer = ClaimsReader.GetStringClaim(claims, ClaimNames.Issuer);
+            if (issuer != this.configuration.Issuer)
             {
                 throw ErrorFactory.CreateClient401Error("The issuer claim had an unexpected value");
             }
@@ -158,11 +160,12 @@ namespace FinalApi.Plumbing.OAuth
         }
 
         /*
-         * See if the token has already expired
+         * Return true if the token has expired
          */
         private bool IsExpired(JwtClaims claims)
         {
-            return claims.Exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var exp = ClaimsReader.GetIntegerClaim(claims, ClaimNames.Exp, false);
+            return exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }

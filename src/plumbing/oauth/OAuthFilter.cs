@@ -55,7 +55,8 @@ namespace FinalApi.Plumbing.OAuth
             extraClaims = await this.extraClaimsProvider.LookupExtraClaimsAsync(jwtClaims, request.HttpContext.RequestServices);
 
             // Cache the extra values for subsequent requests with the same access token
-            await this.cache.SetItemAsync(accessTokenHash, extraClaims, jwtClaims.Exp);
+            var exp = ClaimsReader.GetIntegerClaim(jwtClaims, ClaimNames.Exp);
+            await this.cache.SetItemAsync(accessTokenHash, extraClaims, exp);
 
             // Return the final claims used by the API's authorization logic
             return this.CreateClaimsPrincipal(jwtClaims, extraClaims);

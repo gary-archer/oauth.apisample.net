@@ -76,14 +76,6 @@ namespace FinalApi.Plumbing.Logging
         }
 
         /*
-         * The session ID is written to response headers
-         */
-        public string GetSessionId()
-        {
-            return this.data.SessionId;
-        }
-
-        /*
          * An internal method for setting the operation name
          */
         public void SetOperationName(string name)

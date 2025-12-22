@@ -1,6 +1,5 @@
 namespace FinalApi.Plumbing.Claims
 {
-    using System.Text.Json.Nodes;
     using FinalApi.Plumbing.Errors;
 
     /*
@@ -11,12 +10,19 @@ namespace FinalApi.Plumbing.Claims
         /*
          * Return a mandatory string claim
          */
-        public static string GetStringClaim(JsonNode claims, string name)
+        public static string GetStringClaim(JwtClaims claims, string name, bool required = true)
         {
-            var claim = claims[name]?.GetValue<string>();
+            var claim = claims.Payload[name]?.GetValue<string>();
             if (claim == null)
             {
-                throw ErrorUtils.FromMissingClaim(name);
+                if (required)
+                {
+                    throw ErrorUtils.FromMissingClaim(name);
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
 
             return claim;
@@ -25,12 +31,19 @@ namespace FinalApi.Plumbing.Claims
         /*
          * Return a mandatory integer claim
          */
-        public static int GetIntegerClaim(JsonNode claims, string name)
+        public static int GetIntegerClaim(JwtClaims claims, string name, bool required = true)
         {
-            var claim = claims[name]?.GetValue<int>();
+            var claim = claims.Payload[name]?.GetValue<int>();
             if (claim == null)
             {
-                throw ErrorUtils.FromMissingClaim(name);
+                if (required)
+                {
+                    throw ErrorUtils.FromMissingClaim(name);
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             return claim.Value;
