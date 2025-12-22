@@ -12,15 +12,13 @@ namespace FinalApi.Test.Utils
     public sealed class ApiClient
     {
         private readonly string baseUrl;
-        private readonly string clientName;
         private readonly string sessionId;
         private readonly HttpProxy httpProxy;
 
-        public ApiClient(string baseUrl, string clientName, string sessionId, bool useProxy)
+        public ApiClient(string baseUrl, bool useProxy)
         {
             this.baseUrl = baseUrl;
-            this.clientName = clientName;
-            this.sessionId = sessionId;
+            this.sessionId = Guid.NewGuid().ToString();
             this.httpProxy = new HttpProxy(useProxy, "http://127.0.0.1:8888");
         }
 
@@ -70,12 +68,10 @@ namespace FinalApi.Test.Utils
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", options.AccessToken);
 
                 // Add headers
-                request.Headers.Add("authsamples-api-client", this.clientName);
-                request.Headers.Add("authsamples-session-id", this.sessionId);
-                request.Headers.Add("authsamples-correlation-id", correlationId);
+                request.Headers.Add("correlation-id", correlationId);
                 if (options.RehearseException)
                 {
-                    request.Headers.Add("authsamples-test-exception", "FinalApi");
+                    request.Headers.Add("api-exception-simulation", "FinalApi");
                 }
 
                 // Send the request

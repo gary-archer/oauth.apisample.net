@@ -102,9 +102,9 @@
         {
             return ErrorFactory.CreateClientErrorWithContext(
                 System.Net.HttpStatusCode.BadRequest,
-                BaseErrorCodes.InsufficientScope,
-                "The token does not contain sufficient scope for this API",
-                $"Missing claim in input: '{claimName}'");
+                BaseErrorCodes.InsufficientData,
+                "The token does not contain sufficient data for this API",
+                $"Missing claim in input: {claimName}");
         }
 
         /*

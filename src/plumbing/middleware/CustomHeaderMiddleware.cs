@@ -7,7 +7,7 @@ namespace FinalApi.Plumbing.Middleware
     using Microsoft.AspNetCore.Http;
 
     /*
-     * A class to process custom headers to enable testers to control non functional behaviour
+     * A class to handle custom header logic
      */
     public sealed class CustomHeaderMiddleware
     {
@@ -27,7 +27,7 @@ namespace FinalApi.Plumbing.Middleware
         public async Task Invoke(HttpContext context, LoggingConfiguration configuration)
         {
             // Cause a 500 error if a special header is received
-            var apiToBreak = context.Request.GetHeader("authsamples-test-exception");
+            var apiToBreak = context.Request.GetHeader("api-exception-simulation");
             if (!string.IsNullOrWhiteSpace(apiToBreak))
             {
                 if (apiToBreak.ToLowerInvariant() == configuration.ApiName.ToLowerInvariant())

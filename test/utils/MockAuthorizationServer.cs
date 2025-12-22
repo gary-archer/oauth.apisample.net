@@ -79,6 +79,8 @@ namespace FinalApi.Test.Utils
                 { "iss", options.Issuer },
                 { "aud", options.Audience },
                 { "scope", options.Scope },
+                { "delegation_id", options.DelegationId },
+                { "client_id", "TestClient" },
                 { "sub", options.Subject },
                 { "manager_id", options.ManagerId },
                 { "role", options.Role },

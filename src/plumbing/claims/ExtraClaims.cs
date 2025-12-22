@@ -13,8 +13,7 @@ namespace FinalApi.Plumbing.Claims
         public ExtraClaims()
         {
             this.Title = string.Empty;
-            this.Regions =
-                [];
+            this.Regions = [];
         }
 
         /*

@@ -1,7 +1,14 @@
 namespace FinalApi.Plumbing.OAuth
 {
     using System;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Diagnostics;
+    using System.IO.Compression;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Security.Claims;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Claims;
     using FinalApi.Plumbing.Configuration;
@@ -16,7 +23,7 @@ namespace FinalApi.Plumbing.OAuth
     {
         private readonly OAuthConfiguration configuration;
         private readonly JsonWebKeyResolver jsonWebKeyResolver;
-        private readonly ILogEntry logEntry;
+        private readonly LogEntry logEntry;
 
         public AccessTokenValidator(
             OAuthConfiguration configuration,
@@ -25,7 +32,7 @@ namespace FinalApi.Plumbing.OAuth
         {
             this.configuration = configuration;
             this.jsonWebKeyResolver = jsonWebKeyResolver;
-            this.logEntry = logEntry;
+            this.logEntry = (LogEntry)logEntry;
         }
 
         /*
@@ -35,7 +42,8 @@ namespace FinalApi.Plumbing.OAuth
         {
             using (this.logEntry.CreatePerformanceBreakdown("tokenValidator"))
             {
-                var claimsJson = string.Empty;
+                JwtClaims claims = null;
+                string claimsJson = string.Empty;
                 try
                 {
                     // Read the token without validating it, to get its key identifier
@@ -55,17 +63,35 @@ namespace FinalApi.Plumbing.OAuth
 
                     // Do the cryptographic validation of the JWT signature using the JWK public key
                     claimsJson = JWT.Decode(accessToken, jwk);
+                    claims = new JwtClaims(claimsJson);
+
+                    // Verify the protocol claims according to best practices
+                    this.ValidateProtocolClaims(claims);
+
+                    // Add identity data to logs
+                    this.logEntry.SetIdentityData(this.GetIdentityData(claims));
                 }
                 catch (Exception ex)
                 {
+                    // For expired access tokens, add identity data to logs
+                    if (claims != null && this.IsExpired(claims))
+                    {
+                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
+                    }
+
+                    // My expiry testing adds extra characters to JWTs to cause 401 errors and simulate expiry over time.
+                    // That results in signature validation errors, which I treat as expiry to demonstrate the desired logging.
+                    if (ex is IntegrityException)
+                    {
+                        claimsJson = JWT.Payload(accessToken);
+                        claims = new JwtClaims(claimsJson);
+                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
+                    }
+
+                    // Otherwise return a 401 error
                     throw ErrorUtils.FromTokenValidationError(ex);
                 }
 
-                // Save to a claims object
-                var claims = new JwtClaims(claimsJson);
-
-                // Verify the protocol claims according to best practices
-                this.ValidateProtocolClaims(claims);
                 return claims;
             }
         }
@@ -85,12 +111,34 @@ namespace FinalApi.Plumbing.OAuth
         }
 
         /*
+        * Collect identity data to add to logs
+        */
+        private IdentityLogData GetIdentityData(JwtClaims claims)
+        {
+            var data = new IdentityLogData()
+            {
+                UserId = ClaimsReader.GetStringClaim(claims, ClaimNames.Subject, false),
+                SessionId = ClaimsReader.GetStringClaim(claims, this.configuration.SessionIDClaimName, false),
+                ClientId = ClaimsReader.GetStringClaim(claims, ClaimNames.ClientId, false),
+                Scope = ClaimsReader.GetStringClaim(claims, ClaimNames.Scope, false),
+                Claims = new JsonObject
+                {
+                    ["managerId"] = ClaimsReader.GetStringClaim(claims, ClaimNames.ManagerId, false),
+                    ["role"] = ClaimsReader.GetStringClaim(claims, ClaimNames.Role, false),
+                },
+            };
+
+            return data;
+        }
+
+        /*
          * jose-jwt does not support checking standard claims for issuer, audience and expiry, so make those checks here instead
          */
         private void ValidateProtocolClaims(JwtClaims claims)
         {
             // Check the expected issuer
-            if (claims.Iss != this.configuration.Issuer)
+            var issuer = ClaimsReader.GetStringClaim(claims, ClaimNames.Issuer);
+            if (issuer != this.configuration.Issuer)
             {
                 throw ErrorFactory.CreateClient401Error("The issuer claim had an unexpected value");
             }
@@ -106,10 +154,19 @@ namespace FinalApi.Plumbing.OAuth
             }
 
             // Check that the JWT is not expired
-            if (claims.Exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            if (this.IsExpired(claims))
             {
                 throw ErrorFactory.CreateClient401Error("The access token is expired");
             }
+        }
+
+        /*
+         * Return true if the token has expired
+         */
+        private bool IsExpired(JwtClaims claims)
+        {
+            var exp = ClaimsReader.GetIntegerClaim(claims, ClaimNames.Exp, false);
+            return exp < DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }

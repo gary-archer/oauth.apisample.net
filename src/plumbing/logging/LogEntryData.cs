@@ -20,7 +20,7 @@
             this.Method = string.Empty;
             this.Path = string.Empty;
             this.ResourceId = string.Empty;
-            this.ClientName = string.Empty;
+            this.ClientId = string.Empty;
             this.UserId = string.Empty;
             this.StatusCode = 0;
             this.MillisecondsTaken = 0;
@@ -32,7 +32,7 @@
             this.Performance = new PerformanceBreakdown("total");
             this.ErrorData = null;
             this.InfoData = new List<JsonNode>();
-            this.Scope = new List<string>();
+            this.Scope = string.Empty;
             this.Claims = null;
         }
 
@@ -60,8 +60,8 @@
         // The resource id(s) in the request URL path segments is often useful to query by
         public string ResourceId { get; set; }
 
-        // The calling application name
-        public string ClientName { get; set; }
+        // The calling ID or name
+        public string ClientId { get; set; }
 
         // The subject claim from the OAuth 2.0 access token
         public string UserId { get; set; }
@@ -97,7 +97,7 @@
         public List<JsonNode> InfoData { get; private set; }
 
         // The OAuth scopes from the access token
-        public List<string> Scope { get; set; }
+        public string Scope { get; set; }
 
         // The OAuth claims from the access token
         public JsonNode Claims { get; set; }
@@ -126,7 +126,7 @@
             this.OutputString((x) => output["method"] = x, this.Method);
             this.OutputString((x) => output["path"] = x, this.Path);
             this.OutputString((x) => output["resourceId"] = x, this.ResourceId);
-            this.OutputString((x) => output["clientName"] = x, this.ClientName);
+            this.OutputString((x) => output["clientId"] = x, this.ClientId);
             this.OutputString((x) => output["userId"] = x, this.UserId);
             this.OutputNumber((x) => output["statusCode"] = x, this.StatusCode);
             this.OutputString((x) => output["errorCode"] = x, this.ErrorCode);
@@ -157,7 +157,7 @@
             this.OutputString((x) => output["method"] = x, this.Method);
             this.OutputString((x) => output["path"] = x, this.Path);
             this.OutputString((x) => output["resourceId"] = x, this.ResourceId);
-            this.OutputString((x) => output["clientName"] = x, this.ClientName);
+            this.OutputString((x) => output["clientId"] = x, this.ClientId);
             this.OutputString((x) => output["userId"] = x, this.UserId);
             this.OutputNumber((x) => output["statusCode"] = x, this.StatusCode);
             this.OutputString((x) => output["errorCode"] = x, this.ErrorCode);
@@ -168,7 +168,7 @@
             output["isAuthenticated"] = isAuthenticated;
             output["isAuthorized"] = isAuthenticated && (this.StatusCode >= 200 && this.StatusCode <= 299);
 
-            if (this.Scope.Count > 0)
+            if (!string.IsNullOrWhiteSpace(this.Scope))
             {
                 output["scope"] = new JsonArray(this.Scope.Select(s => JsonValue.Create(s)).ToArray());
             }

@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #
 # Delete unwanted files that Visual Studio Code generates
 #
-rm oauth.apisample.netcore.sln 2>/dev/null
+rm oauth.apisample.net.sln 2>/dev/null
 
 #
 # Build the app

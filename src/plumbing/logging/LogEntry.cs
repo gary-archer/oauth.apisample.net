@@ -52,41 +52,27 @@ namespace FinalApi.Plumbing.Logging
                     this.data.Path += request.QueryString.Value;
                 }
 
-                // Our callers can supply a custom header so that we can keep track of who is calling each API
-                var clientName = request.GetHeader("authsamples-api-client");
-                if (!string.IsNullOrWhiteSpace(clientName))
-                {
-                    this.data.ClientName = clientName;
-                }
-
                 // Use the correlation id from request headers or create one
-                var correlationId = request.GetHeader("authsamples-correlation-id");
+                var correlationId = request.GetHeader("correlation-id");
                 if (!string.IsNullOrWhiteSpace(correlationId))
                 {
-                    this.data.CorrelationId = correlationId;
-                }
-                else
-                {
-                    this.data.CorrelationId = Guid.NewGuid().ToString();
+                    correlationId = TextValidator.Sanitize(correlationId);
                 }
 
-                // Log an optional session id if supplied
-                var sessionId = request.GetHeader("authsamples-session-id");
-                if (!string.IsNullOrWhiteSpace(sessionId))
-                {
-                    this.data.SessionId = sessionId;
-                }
+                this.data.CorrelationId = !string.IsNullOrWhiteSpace(correlationId) ? correlationId : Guid.NewGuid().ToString();
             }
         }
 
         /*
-         * Add identity details for secured requests
+         * Add identity details
          */
-        public void SetIdentity(string subject, List<string> scope, JsonNode claims)
+        public void SetIdentityData(IdentityLogData data)
         {
-            this.data.UserId = subject;
-            this.data.Scope = scope;
-            this.data.Claims = claims;
+            this.data.UserId = data.UserId;
+            this.data.ClientId = data.ClientId;
+            this.data.SessionId = data.SessionId;
+            this.data.Scope = data.Scope;
+            this.data.Claims = data.Claims;
         }
 
         /*
