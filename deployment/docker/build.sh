@@ -16,18 +16,26 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Build the code
+# Get the architecture
 #
-dotnet publish finalapi.csproj -c Release -r linux-x64 --no-self-contained
+export ARCH='x64'
+if [ "$(uname -m)" == 'arm64' ]; then
+  export ARCH='arm64'
+fi
+
+#
+# Build the code for the architecture
+#
+dotnet publish finalapi.csproj -c Release -r "linux-$ARCH" --no-self-contained
 if [ $? -ne 0 ]; then
   echo '.NET API build problem encountered'
   exit 1
 fi
 
 #
-# Build the docker image
+# Build the docker image for the architecture
 #
-docker build --no-cache -t finalnetcoreapi:latest .
+docker build --build-arg "ARCH=$ARCH" --no-cache -t finalnetcoreapi:latest .
 if [ $? -ne 0 ]; then
   echo 'Problem encountered building the API docker image'
   exit
