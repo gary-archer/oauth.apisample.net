@@ -5,25 +5,8 @@
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
-  <!-- The test code is more readable without the noise of generated doc -->
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
-
-    <!-- Use utility classes from the main API-->
-    <ProjectReference Include="..\finalapi.csproj" />
-
-    <!-- JWT acess token handling -->
     <PackageReference Include="jose-jwt" Version="5.2.0" />
-
-    <!-- Use code quality checks for test code -->
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
 
     <!-- Add test dependencies
          https://xunit.net/docs/getting-started/v3/getting-started -->

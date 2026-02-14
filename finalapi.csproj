@@ -4,33 +4,20 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <!-- Our code sample is more readable without the noise of generated doc -->
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
-    <!-- JWT acess token handling -->
     <PackageReference Include="jose-jwt" Version="5.2.0" />
-
-    <!-- API logging -->
     <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
 
     <!-- Exclude child projects when running dotnet build -->
     <Compile Remove="test\**" />
 
-    <!-- Code quality checks -->
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-
     <!-- Prevent these items from being copied to the publish folder -->
     <Content Remove="api.config.json" />
     <Content Remove="data\**\*" />
-    <Content Remove="environments\**\*" />
+    <Content Remove="deployment\**\*" />
     <Content Remove="test\**\*" />
   </ItemGroup>
+
 </Project>

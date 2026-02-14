@@ -4,7 +4,6 @@ namespace FinalApi.Test.Utils
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
-    using FinalApi.Plumbing.Utilities;
 
     /*
      * A utility class to call the API in a parameterized manner
