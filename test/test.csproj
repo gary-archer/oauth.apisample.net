@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
@@ -11,8 +12,9 @@
     <!-- Add test dependencies
          https://xunit.net/docs/getting-started/v3/getting-started -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.2" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="Xunit.v3.Priority" Version="1.1.18" />
 
     <!-- Improve presentation of test output: 
          https://xunit.net/docs/config-xunit-runner-json -->

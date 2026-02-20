@@ -295,7 +295,7 @@ namespace FinalApi.Test
          */
         private void OutputMessage(string colourCode, string message)
         {
-            Console.WriteLine(colourCode + message);
+            Console.Error.WriteLine(colourCode + message);
         }
     }
 }

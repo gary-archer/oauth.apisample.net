@@ -9,13 +9,11 @@ namespace FinalApi.IntegrationTests
     using FinalApi.Test.Utils;
     using Jose;
     using Xunit;
+    using Xunit.v3.Priority;
 
     /*
      * Test the API in isolation, without any dependencies on the Authorization Server
      */
-    [TestCaseOrderer(
-        ordererTypeName: "FinalApi.Test.Utils.TestOrderer",
-        ordererAssemblyName: "test")]
     public class IntegrationTests : IClassFixture<IntegrationTestState>
     {
         // State shared across the suite of tests
@@ -32,8 +30,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that a request without an access token is rejected
          */
-        [Fact]
-        [TestOrder(1)]
+        [Fact, Priority(1)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns401_ForMissingJwt()
         {
@@ -51,8 +48,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that an expired access token is rejected
          */
-        [Fact]
-        [TestOrder(2)]
+        [Fact, Priority(2)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns401_ForExpiredJwt()
         {
@@ -77,8 +73,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that an access token with an invalid issuer is rejected
          */
-        [Fact]
-        [TestOrder(3)]
+        [Fact, Priority(3)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns401_ForInvalidIssuer()
         {
@@ -103,8 +98,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that an access token with an invalid audience is rejected
          */
-        [Fact]
-        [TestOrder(4)]
+        [Fact, Priority(4)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns401_ForInvalidAudience()
         {
@@ -129,8 +123,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that an access token with an invalid signature is rejected
          */
-        [Fact]
-        [TestOrder(5)]
+        [Fact, Priority(5)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns401_ForInvalidSignature()
         {
@@ -158,8 +151,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test that an access token with an invalid scope is rejected
          */
-        [Fact]
-        [TestOrder(6)]
+        [Fact, Priority(6)]
         [Trait("Category", "Integration")]
         public async Task CallApi_Returns403_ForInvalidScope()
         {
@@ -184,8 +176,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test rehearsing a 500 error when there is an exception in the API
          */
-        [Fact]
-        [TestOrder(7)]
+        [Fact, Priority(7)]
         [Trait("Category", "Integration")]
         public async Task CallApi_ReturnsSupportable500Error_ForErrorRehearsalRequest()
         {
@@ -210,8 +201,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting business user attributes for the standard user
          */
-        [Fact]
-        [TestOrder(8)]
+        [Fact, Priority(8)]
         [Trait("Category", "Integration")]
         public async Task GetUserInfo_ReturnsSingleRegion_ForStandardUser()
         {
@@ -236,8 +226,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting business user attributes for the admin user
          */
-        [Fact]
-        [TestOrder(9)]
+        [Fact, Priority(9)]
         [Trait("Category", "Integration")]
         public async Task GetUserInfo_ReturnsAllRegions_ForAdminUser()
         {
@@ -261,8 +250,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting companies
          */
-        [Fact]
-        [TestOrder(10)]
+        [Fact, Priority(10)]
         [Trait("Category", "Integration")]
         public async Task GetCompanies_ReturnsTwoItems_ForStandardUser()
         {
@@ -285,8 +273,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting companies for the admin user
          */
-        [Fact]
-        [TestOrder(11)]
+        [Fact, Priority(11)]
         [Trait("Category", "Integration")]
         public async Task GetCompanies_ReturnsAllItems_ForAdminUser()
         {
@@ -309,8 +296,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting allowed transactions
          */
-        [Fact]
-        [TestOrder(12)]
+        [Fact, Priority(12)]
         [Trait("Category", "Integration")]
         public async Task GetTransactions_ReturnsAllowedItems_ForCompaniesMatchingTheRegionClaim()
         {
@@ -334,8 +320,7 @@ namespace FinalApi.IntegrationTests
         /*
          * Test getting unauthorized transactions
          */
-        [Fact]
-        [TestOrder(13)]
+        [Fact, Priority(13)]
         [Trait("Category", "Integration")]
         public async Task GetTransactions_ReturnsNotFoundForUser_ForCompaniesNotMatchingTheRegionClaim()
         {

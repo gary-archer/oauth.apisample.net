@@ -9,11 +9,10 @@
     <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
 
-    <!-- Exclude child projects when running dotnet build -->
+  <ItemGroup>
     <Compile Remove="test\**" />
-
-    <!-- Prevent these items from being copied to the publish folder -->
     <Content Remove="api.config.json" />
     <Content Remove="data\**\*" />
     <Content Remove="deployment\**\*" />

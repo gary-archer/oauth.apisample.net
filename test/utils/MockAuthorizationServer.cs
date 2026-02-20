@@ -32,12 +32,11 @@ namespace FinalApi.Test.Utils
             this.keyId = Guid.NewGuid().ToString();
 
             this.tokenSigningPrivateKey = new Jwk(this.keypair, true);
-            this.tokenSigningPrivateKey.Alg = algorithm;
-            this.tokenSigningPrivateKey.KeyId = this.keyId;
-
-            this.tokenSigningPublicKey = new Jwk(this.keypair, false);
-            this.tokenSigningPublicKey.Alg = algorithm;
-            this.tokenSigningPublicKey.KeyId = this.keyId;
+            this.tokenSigningPublicKey = new Jwk(this.keypair, false)
+            {
+                Alg = algorithm,
+                KeyId = this.keyId
+            };
         }
 
         public void Start()
