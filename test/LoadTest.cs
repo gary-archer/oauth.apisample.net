@@ -291,7 +291,7 @@ namespace FinalApi.Test
         }
 
         /*
-         * A utility to output in a desired colour
+         * A workaround to get bare output in colour, which XUnit's options do not seem to support
          */
         private void OutputMessage(string colourCode, string message)
         {
