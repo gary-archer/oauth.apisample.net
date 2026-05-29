@@ -94,7 +94,7 @@ namespace FinalApi.Plumbing.Errors
          */
         public override ClientError ToClientError(string apiName)
         {
-            var error = ErrorFactory.CreateClientError(this.statusCode, this.errorCode, this.Message);
+            var error = new ClientErrorImpl(this.statusCode, this.errorCode, this.Message);
             error.SetExceptionDetails(apiName, this.instanceId, this.utcTime);
             return error;
         }
