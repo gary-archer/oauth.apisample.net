@@ -73,22 +73,7 @@ namespace FinalApi.Plumbing.OAuth
                 }
                 catch (Exception ex)
                 {
-                    // For expired access tokens, add identity data to logs
-                    if (claims != null && this.IsExpired(claims))
-                    {
-                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
-                    }
-
-                    // My expiry testing adds extra characters to JWTs to cause 401 errors and simulate expiry over time.
-                    // That results in signature validation errors, which I treat as expiry to demonstrate the desired logging.
-                    if (ex is IntegrityException)
-                    {
-                        claimsJson = JWT.Payload(accessToken);
-                        claims = new JwtClaims(claimsJson);
-                        this.logEntry.SetIdentityData(this.GetIdentityData(claims));
-                    }
-
-                    // Otherwise return a 401 error
+                    // Log token validation errors
                     throw ErrorUtils.FromTokenValidationError(ex);
                 }
 
