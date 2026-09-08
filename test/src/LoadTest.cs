@@ -291,11 +291,11 @@ namespace FinalApi.Test
         }
 
         /*
-         * A workaround to get bare output in colour, which XUnit's options do not seem to support
+         * Output each line using colour codes
          */
         private void OutputMessage(string colourCode, string message)
         {
-            Console.Error.WriteLine(colourCode + message);
+            TestContext.Current.SendDiagnosticMessage(colourCode + message);
         }
     }
 }
