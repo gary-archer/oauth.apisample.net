@@ -1,3 +1,6 @@
+using Xunit;
 using Xunit.Runner.Common;
+using FinalApi.Test.XUnit;
 
-[assembly: RegisterRunnerReporter(typeof(FinalApi.Test.Reporter.CustomReporter))]
+[assembly: TestMethodOrderer(typeof(SequentialTestMethodOrderer))]
+[assembly: RegisterRunnerReporter(typeof(CustomReporter))]

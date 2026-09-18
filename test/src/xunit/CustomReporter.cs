@@ -1,4 +1,4 @@
-namespace FinalApi.Test.Reporter
+namespace FinalApi.Test.XUnit
 {
     using System.Threading.Tasks;
     using Xunit.Runner.Common;

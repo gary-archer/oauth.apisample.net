@@ -1,4 +1,4 @@
-namespace FinalApi.IntegrationTests
+namespace FinalApi.Test
 {
     using System;
     using FinalApi.Test.Utils;

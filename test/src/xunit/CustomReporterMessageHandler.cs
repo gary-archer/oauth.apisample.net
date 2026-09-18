@@ -1,4 +1,4 @@
-namespace FinalApi.Test.Reporter
+namespace FinalApi.Test.XUnit
 {
     using Xunit.Runner.Common;
     using Xunit.Sdk;
