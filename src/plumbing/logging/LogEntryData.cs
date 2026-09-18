@@ -31,7 +31,7 @@
             this.SessionId = string.Empty;
             this.Performance = new PerformanceBreakdown("total");
             this.ErrorData = null;
-            this.InfoData = new List<JsonNode>();
+            this.InfoData = [];
             this.Scope = string.Empty;
             this.Claims = null;
         }
@@ -91,7 +91,7 @@
         public PerformanceBreakdown Performance { get; private set;  }
 
         // An object containing error data, written for failed requests
-        public JsonNode ErrorData { get; set; }
+        public JsonNode? ErrorData { get; set; }
 
         // Can be populated in scenarios when extra text is useful
         public List<JsonNode> InfoData { get; private set; }
@@ -100,14 +100,14 @@
         public string Scope { get; set; }
 
         // The OAuth claims from the access token
-        public JsonNode Claims { get; set; }
+        public JsonNode? Claims { get; set; }
 
         /*
         * Set fields at the end of a log entry
         */
         public void Finalise()
         {
-            this.MillisecondsTaken = this.Performance.MillisecondsTaken;
+            this.MillisecondsTaken = this.Performance!.MillisecondsTaken;
         }
 
         /*

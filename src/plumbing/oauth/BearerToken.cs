@@ -23,7 +23,7 @@ namespace FinalApi.Plumbing.OAuth
                 }
             }
 
-            return null;
+            return string.Empty;
         }
     }
 }

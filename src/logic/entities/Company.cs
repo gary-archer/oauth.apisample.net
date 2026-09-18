@@ -5,16 +5,16 @@ namespace FinalApi.Logic.Entities
      */
     public class Company
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string Region { get; set; }
+        public required string Region { get; set; }
 
-        public double TargetUsd { get; set; }
+        public required double TargetUsd { get; set; }
 
-        public double InvestmentUsd { get; set; }
+        public required double InvestmentUsd { get; set; }
 
-        public int NoInvestors { get; set; }
+        public required int NoInvestors { get; set; }
     }
 }

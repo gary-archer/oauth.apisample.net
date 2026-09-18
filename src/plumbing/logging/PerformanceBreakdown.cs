@@ -13,13 +13,13 @@
         private readonly string name;
         private readonly Stopwatch stopWatch;
         private readonly IList<PerformanceBreakdown> children;
-        private JsonNode details;
+        private JsonNode? details;
 
         public PerformanceBreakdown(string name)
         {
             this.name = name;
             this.stopWatch = new Stopwatch();
-            this.children = new List<PerformanceBreakdown>();
+            this.children = [];
             this.MillisecondsTaken = 0;
             this.details = null;
         }

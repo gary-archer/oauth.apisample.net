@@ -13,7 +13,7 @@ namespace FinalApi.Plumbing.Claims
          */
         public JwtClaims(string claimsJson)
         {
-            this.Payload = JsonNode.Parse(claimsJson);
+            this.Payload = JsonNode.Parse(claimsJson)!;
         }
 
         /*
@@ -36,7 +36,7 @@ namespace FinalApi.Plumbing.Claims
                 {
                     foreach (var audience in audiences)
                     {
-                        results.Add(audience.GetValue<string>());
+                        results.Add(audience!.GetValue<string>());
                     }
                 }
                 else

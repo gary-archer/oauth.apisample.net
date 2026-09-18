@@ -29,13 +29,13 @@ namespace FinalApi.Plumbing.OAuth
         /*
          * Return cached keys or download if a new kid is received
          */
-        public async Task<Jwk> GetTokenSigningPublicKey(string kid, string algorithm)
+        public async Task<Jwk?> GetTokenSigningPublicKey(string kid, string algorithm)
         {
             try
             {
                 // Try to load keys from the cache
                 var cachedJson = await this.cache.GetJwksKeysAsync();
-                if (cachedJson != null)
+                if (!string.IsNullOrWhiteSpace(cachedJson))
                 {
                     var cachedKeySet = JwkSet.FromJson(cachedJson, JWT.DefaultSettings.JsonMapper);
                     var foundInCache = cachedKeySet.Keys.FirstOrDefault(k => k.KeyId == kid);

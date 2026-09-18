@@ -1,13 +1,7 @@
 namespace FinalApi.Plumbing.OAuth
 {
     using System;
-    using System.ComponentModel;
-    using System.Data.Common;
-    using System.Diagnostics;
-    using System.IO.Compression;
     using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Security.Claims;
     using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using FinalApi.Plumbing.Claims;
@@ -42,7 +36,7 @@ namespace FinalApi.Plumbing.OAuth
         {
             using (this.logEntry.CreatePerformanceBreakdown("tokenValidator"))
             {
-                JwtClaims claims = null;
+                JwtClaims? claims = null;
                 string claimsJson = string.Empty;
                 try
                 {
@@ -89,10 +83,10 @@ namespace FinalApi.Plumbing.OAuth
             var headers = JWT.Headers(accessToken);
             if (headers.ContainsKey("kid"))
             {
-                return headers["kid"] as string;
+                return (headers["kid"] as string)!;
             }
 
-            return null;
+            return string.Empty;
         }
 
         /*

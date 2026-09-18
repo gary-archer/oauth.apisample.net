@@ -161,7 +161,7 @@ namespace FinalApi.Plumbing.Logging
             var operationName = routes["action"];
             if (operationName != null)
             {
-                this.data.OperationName = operationName.ToString();
+                this.data.OperationName = operationName.ToString() ?? string.Empty;
             }
 
             // Capture template ids in URL path segments
@@ -170,7 +170,7 @@ namespace FinalApi.Plumbing.Logging
             {
                 if (route.Key != "action" && route.Key != "controller")
                 {
-                    var id = route.Value.ToString();
+                    var id = route.Value?.ToString();
                     if (!string.IsNullOrWhiteSpace(id))
                     {
                         ids.Add(id);

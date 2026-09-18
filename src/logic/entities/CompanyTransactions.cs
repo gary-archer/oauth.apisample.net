@@ -7,10 +7,10 @@ namespace FinalApi.Logic.Entities
      */
     public class CompanyTransactions
     {
-        public int? Id { get; set; }
+        public required int Id { get; set; }
 
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
 
-        public IEnumerable<Transaction> Transactions { get; set; }
-    }
+        public required IEnumerable<Transaction> Transactions { get; set; }
+     }
 }

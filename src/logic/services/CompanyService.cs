@@ -42,7 +42,7 @@ namespace FinalApi.Logic.Services
         public async Task<CompanyTransactions> GetCompanyTransactionsAsync(int id)
         {
             var data = await this.repository.GetCompanyTransactionsAsync(id);
-            if (data == null || !this.IsUserAuthorizedForCompany(data.Company))
+            if (data == null || !this.IsUserAuthorizedForCompany(data.Company!))
             {
                 throw this.UnauthorizedError(id);
             }

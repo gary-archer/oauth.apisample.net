@@ -38,7 +38,7 @@ fi
 #
 # Run the previously built API
 #
-dotnet run --no-build
+dotnet watch --no-build
 if [ $? -ne 0 ]; then
   echo 'Problem encountered running the API'
   read -n 1

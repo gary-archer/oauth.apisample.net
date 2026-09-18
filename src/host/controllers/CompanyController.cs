@@ -39,8 +39,7 @@
         public async Task<CompanyTransactions> GetCompanyTransactionsAsync(string id)
         {
             // Return a 400 if the id is not a number
-            int idValue;
-            if (!int.TryParse(id, NumberStyles.Any, CultureInfo.InvariantCulture, out idValue) || idValue <= 0)
+            if (!int.TryParse(id, NumberStyles.Any, CultureInfo.InvariantCulture, out int idValue) || idValue <= 0)
             {
                 throw ErrorFactory.CreateClientError(
                     HttpStatusCode.BadRequest,

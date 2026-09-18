@@ -35,7 +35,7 @@ namespace FinalApi.Logic.Repositories
         /*
          * Get transaction details for a company
          */
-        public async Task<CompanyTransactions> GetCompanyTransactionsAsync(int id)
+        public async Task<CompanyTransactions?> GetCompanyTransactionsAsync(int id)
         {
             using (this.logEntry.CreatePerformanceBreakdown("getCompanyTransactions"))
             {

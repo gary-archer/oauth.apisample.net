@@ -26,7 +26,7 @@
             }
 
             // Otherwise create a generic server error
-            return CreateServerError(exception, null, null);
+            return CreateServerError(exception, string.Empty, string.Empty);
         }
 
         /*
@@ -40,8 +40,8 @@
 
             // Create a default error and set a default technical message
             return ErrorFactory.CreateServerError(
-                errorCode == null ? defaultErrorCode : errorCode,
-                message == null ? defaultMessage : message,
+                string.IsNullOrWhiteSpace(errorCode) ? defaultErrorCode : errorCode,
+                string.IsNullOrWhiteSpace(message) ? defaultMessage : message,
                 exception);
         }
 
@@ -110,7 +110,7 @@
         /*
          * Try to convert an exception to a server error
          */
-        private static ServerError TryConvertToServerError(Exception exception)
+        private static ServerError? TryConvertToServerError(Exception exception)
         {
             // Direct conversions
             if (exception is ServerError)
@@ -136,7 +136,7 @@
         /*
          * Try to convert an exception to a client error
          */
-        private static ClientError TryConvertToClientError(Exception exception)
+        private static ClientError? TryConvertToClientError(Exception exception)
         {
             if (exception is ClientError)
             {

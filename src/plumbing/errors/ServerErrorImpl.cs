@@ -20,7 +20,7 @@ namespace FinalApi.Plumbing.Errors
         private readonly HttpStatusCode statusCode;
         private readonly int instanceId;
         private readonly string utcTime;
-        private JsonNode details;
+        private JsonNode? details;
 
         /*
          * The default constructor
@@ -33,7 +33,7 @@ namespace FinalApi.Plumbing.Errors
         /*
          * The main constructor
          */
-        public ServerErrorImpl(string errorCode, string userMessage, Exception inner)
+        public ServerErrorImpl(string errorCode, string userMessage, Exception? inner)
             : base(userMessage, inner)
         {
             this.errorCode = errorCode;
@@ -83,7 +83,7 @@ namespace FinalApi.Plumbing.Errors
             var frames = this.GetOriginalException().StackTrace?.Split('\n');
             if (frames?.Length > 0)
             {
-                data["serviceError"]["stack"] = new JsonArray(frames.Select(f => JsonValue.Create(f.Trim())).ToArray());
+                data["serviceError"]!["stack"] = new JsonArray(frames.Select(f => JsonValue.Create(f.Trim())).ToArray());
             }
 
             return data;
@@ -105,7 +105,7 @@ namespace FinalApi.Plumbing.Errors
         private Exception GetOriginalException()
         {
             Exception ex = this;
-            Exception inner = this;
+            Exception? inner = this;
             while (inner != null)
             {
                 inner = inner.InnerException;

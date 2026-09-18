@@ -6,24 +6,24 @@ namespace FinalApi.Plumbing.Configuration
     public sealed class OAuthConfiguration
     {
         // The expected issuer in JWT access tokens received
-        public string Issuer { get; set; }
+        public required string Issuer { get; set; }
 
         // The expected audience in JWT access tokens received
-        public string Audience { get; set; }
+        public required string Audience { get; set; }
 
         // The expected algorithm in JWT access tokens received
-        public string Algorithm { get; set; }
+        public required string Algorithm { get; set; }
 
         // A required scope to call the API
-        public string Scope { get; set; }
+        public required string Scope { get; set; }
 
         // The endpoint from which to download the token signing public key
-        public string JwksEndpoint { get; set; }
+        public required string JwksEndpoint { get; set; }
 
         // The access token claim that the API uses as a session ID
-        public string DelegationIDClaimName { get; set; }
+        public required string DelegationIDClaimName { get; set; }
 
         // Optional claims caching configuration
-        public int ClaimsCacheTimeToLiveMinutes { get; set; }
+        public required int ClaimsCacheTimeToLiveMinutes { get; set; }
     }
 }

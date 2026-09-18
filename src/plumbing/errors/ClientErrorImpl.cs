@@ -11,7 +11,7 @@ namespace FinalApi.Plumbing.Errors
         // Mandatory fields for both 4xx and 500 errors
         private readonly HttpStatusCode statusCode;
         private readonly string errorCode;
-        private JsonNode logContext;
+        private JsonNode? logContext;
 
         // Extra fields returned to the client for UI displays of 500 errors
         private string area;

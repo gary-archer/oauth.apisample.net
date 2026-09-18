@@ -17,7 +17,7 @@ namespace FinalApi.Host.Controllers
         [HttpGet("")]
         public ClientUserInfo GetUserInfo()
         {
-            var claimsPrincipal = this.User as CustomClaimsPrincipal;
+            var claimsPrincipal = (this.User as CustomClaimsPrincipal)!;
 
             return new ClientUserInfo(
                 claimsPrincipal.Extra.Title,

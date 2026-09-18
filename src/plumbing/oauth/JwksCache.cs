@@ -41,7 +41,7 @@ namespace FinalApi.Plumbing.OAuth
             var bytes = await this.cache.GetAsync("JWKS");
             if (bytes == null)
             {
-                return null;
+                return string.Empty;
             }
 
             return Encoding.UTF8.GetString(bytes);

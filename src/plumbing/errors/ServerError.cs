@@ -17,7 +17,7 @@
         {
         }
 
-        protected ServerError(string message, Exception inner)
+        protected ServerError(string message, Exception? inner)
             : base(message, inner)
         {
         }

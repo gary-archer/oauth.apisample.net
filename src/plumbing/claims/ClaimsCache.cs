@@ -24,7 +24,7 @@ namespace FinalApi.Plumbing.Claims
         {
             this.cache = cache;
             this.timeToLiveMinutes = timeToLiveMinutes;
-            this.debugLogger = container.GetService<ILoggerFactory>().CreateLogger<ClaimsCache>();
+            this.debugLogger = container.GetService<ILoggerFactory>()!.CreateLogger<ClaimsCache>();
         }
 
         /*
@@ -58,7 +58,7 @@ namespace FinalApi.Plumbing.Claims
         /*
          * Read an item from the cache or return null if not found
          */
-        public async Task<ExtraClaims> GetItemAsync(string accessTokenHash)
+        public async Task<ExtraClaims?> GetItemAsync(string accessTokenHash)
         {
             var bytes = await this.cache.GetAsync(accessTokenHash);
             if (bytes == null)
@@ -68,7 +68,7 @@ namespace FinalApi.Plumbing.Claims
 
             this.debugLogger.LogDebug($"Found existing item in cache (hash: {accessTokenHash})");
             var json = Encoding.UTF8.GetString(bytes);
-            return JsonSerializer.Deserialize<ExtraClaims>(json);
+            return JsonSerializer.Deserialize<ExtraClaims>(json)!;
         }
     }
 }

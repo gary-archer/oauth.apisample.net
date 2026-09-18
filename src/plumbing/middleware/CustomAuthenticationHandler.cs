@@ -38,13 +38,13 @@ namespace FinalApi.Plumbing.Middleware
             try
             {
                 // Do the authorization work and get a claims principal
-                var oauthFilter = (OAuthFilter)this.Context.RequestServices.GetService(typeof(OAuthFilter));
-                var claimsPrincipal = await oauthFilter.ExecuteAsync(this.Request);
+                var oauthFilter = this.Context.RequestServices.GetService(typeof(OAuthFilter)) as OAuthFilter;
+                var claimsPrincipal = await oauthFilter!.ExecuteAsync(this.Request);
 
                 // The sample API requires the same scope for all endpoints, and it is enforced here
-                var oauthConfiguration = (OAuthConfiguration)this.Context.RequestServices.GetService(typeof(OAuthConfiguration));
+                var oauthConfiguration = this.Context.RequestServices.GetService(typeof(OAuthConfiguration)) as OAuthConfiguration;
                 var receivedScopes = ClaimsReader.GetStringClaim(claimsPrincipal.Jwt, ClaimNames.Scope).Split(" ").ToList();
-                if (!receivedScopes.Contains(oauthConfiguration.Scope))
+                if (!receivedScopes.Contains(oauthConfiguration!.Scope))
                 {
                     throw ErrorFactory.CreateClientError(
                         HttpStatusCode.Forbidden,
@@ -76,15 +76,15 @@ namespace FinalApi.Plumbing.Middleware
             var clientError = this.GetRequestItem<ClientError>(ClientErrorKey);
             if (clientError != null)
             {
-                var oauthConfiguration = (OAuthConfiguration)this.Context.RequestServices.GetService(typeof(OAuthConfiguration));
-                await ResponseErrorWriter.WriteErrorResponse(this.Response, clientError, oauthConfiguration.Scope);
+                var oauthConfiguration = this.Context.RequestServices.GetService(typeof(OAuthConfiguration)) as OAuthConfiguration;
+                await ResponseErrorWriter.WriteErrorResponse(this.Response, clientError, oauthConfiguration!.Scope);
             }
         }
 
         /*
          * Get an HTTP request item and manage casting
          */
-        private TItem GetRequestItem<TItem>(string name)
+        private TItem? GetRequestItem<TItem>(string name)
         {
             var item = this.Request.HttpContext.Items[name];
             if (item != null)

@@ -26,7 +26,7 @@ namespace FinalApi.Logic.Utilities
                     PropertyNameCaseInsensitive = true,
                 };
 
-                return JsonSerializer.Deserialize<T>(jsonText, options);
+                return JsonSerializer.Deserialize<T>(jsonText, options)!;
             }
             catch (Exception ex)
             {

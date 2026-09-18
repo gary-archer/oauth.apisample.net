@@ -13,7 +13,7 @@ namespace FinalApi.Plumbing.Middleware
      */
     public sealed class UnhandledExceptionMiddleware
     {
-        private readonly RequestDelegate next;
+        private readonly RequestDelegate? next;
 
         /*
          * An overridden constructor for startup exceptions
@@ -39,7 +39,7 @@ namespace FinalApi.Plumbing.Middleware
             try
             {
                 // Run the API operation
-                await this.next(context);
+                await this.next!(context);
             }
             catch (Exception exception)
             {
@@ -48,8 +48,8 @@ namespace FinalApi.Plumbing.Middleware
 
                 // Write the error response to the client
                 var oauthConfiguration =
-                    (OAuthConfiguration)context.RequestServices.GetService(typeof(OAuthConfiguration));
-                await ResponseErrorWriter.WriteErrorResponse(context.Response, clientError, oauthConfiguration.Scope);
+                    context.RequestServices.GetService(typeof(OAuthConfiguration)) as OAuthConfiguration;
+                await ResponseErrorWriter.WriteErrorResponse(context.Response, clientError, oauthConfiguration!.Scope);
             }
         }
 
@@ -59,8 +59,8 @@ namespace FinalApi.Plumbing.Middleware
         public ClientError HandleException(Exception exception, HttpContext context)
         {
             // Resolve dependencies used for error processing
-            var logEntry = (LogEntry)context.RequestServices.GetService(typeof(ILogEntry));
-            var configuration = (LoggingConfiguration)context.RequestServices.GetService(typeof(LoggingConfiguration));
+            var logEntry = context.RequestServices.GetService(typeof(ILogEntry)) as LogEntry;
+            var configuration = context.RequestServices.GetService(typeof(LoggingConfiguration)) as LoggingConfiguration;
 
             // Get the error into a known object
             var error = ErrorUtils.FromException(exception);
@@ -68,14 +68,14 @@ namespace FinalApi.Plumbing.Middleware
             {
                 // Handle 5xx errors
                 var serverError = (ServerError)error;
-                logEntry.SetServerError(serverError);
-                return serverError.ToClientError(configuration.ApiName);
+                logEntry!.SetServerError(serverError);
+                return serverError.ToClientError(configuration!.ApiName);
             }
             else
             {
                 // Handle 4xx errors
                 ClientError clientError = (ClientError)error;
-                logEntry.SetClientError(clientError);
+                logEntry!.SetClientError(clientError);
                 return clientError;
             }
         }

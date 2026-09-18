@@ -10,13 +10,13 @@ namespace FinalApi.Host.Configuration
     public class Configuration
     {
         // The API's specific configuration
-        public ApiConfiguration Api { get; set; }
+        public required ApiConfiguration Api { get; set; }
 
         // Common logging
-        public LoggingConfiguration Logging { get; set; }
+        public required LoggingConfiguration Logging { get; set; }
 
         // Common OAuth processing
-        public OAuthConfiguration OAuth { get; set; }
+        public required OAuthConfiguration OAuth { get; set; }
 
         /*
          * A utility method to load the file and deal with casing

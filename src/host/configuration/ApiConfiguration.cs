@@ -5,14 +5,14 @@ namespace FinalApi.Host.Configuration
      */
     public class ApiConfiguration
     {
-        public int Port { get; set; }
+        public required int Port { get; set; }
 
-        public string SslCertificateFileName { get; set; }
+        public required string SslCertificateFileName { get; set; }
 
-        public string SslCertificatePassword { get; set; }
+        public required string SslCertificatePassword { get; set; }
 
-        public bool UseProxy { get; set; }
+        public required bool UseProxy { get; set; }
 
-        public string ProxyUrl { get; set; }
+        public required string ProxyUrl { get; set; }
     }
 }

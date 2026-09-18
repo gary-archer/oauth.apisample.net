@@ -8,9 +8,9 @@
     public sealed class LoggingConfiguration
     {
         // The name of the API
-        public string ApiName { get; set; }
+        public required string ApiName { get; set; }
 
         // Configured loggers
-        public JsonArray Loggers { get; set; }
+        public required JsonArray Loggers { get; set; }
     }
 }

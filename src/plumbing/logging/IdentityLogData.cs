@@ -7,14 +7,14 @@ namespace FinalApi.Plumbing.Logging
      */
     public class IdentityLogData
     {
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
-        public string DelegationId { get; set; }
+        public required string DelegationId { get; set; }
 
-        public string ClientId { get; set; }
+        public required string ClientId { get; set; }
 
-        public string Scope { get; set; }
+        public required string Scope { get; set; }
 
-        public JsonNode Claims { get; set; }
+        public required JsonNode Claims { get; set; }
     }
 }

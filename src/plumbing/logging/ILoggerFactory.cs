@@ -17,12 +17,12 @@ namespace FinalApi.Plumbing.Logging
         void LogStartupError(Exception exception);
 
         // Get the request logger
-        ILog GetRequestLogger();
+        ILog? GetRequestLogger();
 
         // Get the audit logger
-        ILog GetAuditLogger();
+        ILog? GetAuditLogger();
 
         // Get a named debug logger
-        ILog GetDebugLogger(string name);
+        ILog? GetDebugLogger(string name);
     }
 }

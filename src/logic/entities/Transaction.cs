@@ -5,10 +5,10 @@ namespace FinalApi.Logic.Entities
      */
     public class Transaction
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
-        public string InvestorId { get; set; }
+        public required string InvestorId { get; set; }
 
-        public double AmountUsd { get; set; }
+        public required double AmountUsd { get; set; }
     }
 }

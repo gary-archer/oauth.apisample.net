@@ -51,22 +51,22 @@ namespace FinalApi.Plumbing.Logging
             builder.AddLog4Net(options);
 
             // Create the fixed request logger
-            var requestLogConfig = configuration.Loggers.FirstOrDefault(l => l["type"]?.GetValue<string>() == "request");
+            var requestLogConfig = configuration.Loggers.FirstOrDefault(l => l?["type"]?.GetValue<string>() == "request");
             if (requestLogConfig != null)
             {
-                this.performanceThresholdMilliseconds = requestLogConfig["performanceThresholdMilliseconds"].GetValue<int>();
+                this.performanceThresholdMilliseconds = requestLogConfig["performanceThresholdMilliseconds"]?.GetValue<int>() ?? 0;
                 this.CreateRequestLogger(requestLogConfig);
             }
 
             // Create the fixed audit logger
-            var auditLogConfig = configuration.Loggers.FirstOrDefault(l => l["type"]?.GetValue<string>() == "audit");
+            var auditLogConfig = configuration.Loggers.FirstOrDefault(l => l?["type"]?.GetValue<string>() == "audit");
             if (auditLogConfig != null)
             {
                 this.CreateAuditLogger(auditLogConfig);
             }
 
             // Create debug loggers
-            var debugLogConfig = configuration.Loggers.FirstOrDefault(l => l["type"]?.GetValue<string>() == "debug");
+            var debugLogConfig = configuration.Loggers.FirstOrDefault(l => l?["type"]?.GetValue<string>() == "debug");
             if (debugLogConfig != null)
             {
                 this.CreateDebugLoggers(builder, debugLogConfig);
@@ -94,7 +94,7 @@ namespace FinalApi.Plumbing.Logging
         /*
          * Get the request logger
          */
-        public ILog GetRequestLogger()
+        public ILog? GetRequestLogger()
         {
             return this.hasRequestLogger ? LogManager.GetLogger("request", "request") : null;
         }
@@ -102,7 +102,7 @@ namespace FinalApi.Plumbing.Logging
         /*
          * Get the audit logger
          */
-        public ILog GetAuditLogger()
+        public ILog? GetAuditLogger()
         {
             return this.hasAuditLogger ? LogManager.GetLogger("audit", "audit") : null;
         }
@@ -131,7 +131,7 @@ namespace FinalApi.Plumbing.Logging
             var repository = (Hierarchy)LogManager.CreateRepository("request", typeof(Hierarchy));
             repository.Root.Level = repository.LevelMap["Info"];
 
-            var appenders = this.CreateAppenders(config["appenders"].AsArray());
+            var appenders = this.CreateAppenders(config["appenders"]?.AsArray() ?? []);
             BasicConfigurator.Configure(repository, appenders);
             this.hasRequestLogger = true;
         }
@@ -144,7 +144,7 @@ namespace FinalApi.Plumbing.Logging
             var repository = (Hierarchy)LogManager.CreateRepository("audit", typeof(Hierarchy));
             repository.Root.Level = repository.LevelMap["Info"];
 
-            var appenders = this.CreateAppenders(config["appenders"].AsArray());
+            var appenders = this.CreateAppenders(config["appenders"]?.AsArray() ?? []);
             BasicConfigurator.Configure(repository, appenders);
             this.hasAuditLogger = true;
         }
@@ -159,10 +159,10 @@ namespace FinalApi.Plumbing.Logging
             if (appendersConfiguration != null)
             {
                 // Add the console appender if configured
-                var consoleConfig = appendersConfiguration.FirstOrDefault(a => a["type"]?.GetValue<string>() == "console");
+                var consoleConfig = appendersConfiguration.FirstOrDefault(a => a?["type"]?.GetValue<string>() == "console");
                 if (consoleConfig != null)
                 {
-                    var prettyPrint = consoleConfig["prettyPrint"].GetValue<bool>();
+                    var prettyPrint = consoleConfig["prettyPrint"]?.GetValue<bool>() ?? false;
                     var consoleAppender = this.CreateConsoleAppender(prettyPrint);
                     if (consoleAppender != null)
                     {
@@ -171,7 +171,7 @@ namespace FinalApi.Plumbing.Logging
                 }
 
                 // Add the file appender if configured
-                var fileConfig = appendersConfiguration.FirstOrDefault(a => a["type"]?.GetValue<string>() == "file");
+                var fileConfig = appendersConfiguration.FirstOrDefault(a => a?["type"]?.GetValue<string>() == "file");
                 if (fileConfig != null)
                 {
                     var fileAppender = this.CreateFileAppender(fileConfig);
@@ -209,10 +209,10 @@ namespace FinalApi.Plumbing.Logging
         private IAppender CreateFileAppender(JsonNode fileConfiguration)
         {
             // Get values
-            var prefix = fileConfiguration["filePrefix"].GetValue<string>();
-            var folder = fileConfiguration["dirName"].GetValue<string>();
-            var maxSize = fileConfiguration["maxSize"].GetValue<string>();
-            var maxFiles = fileConfiguration["maxFiles"].GetValue<int>();
+            var prefix = fileConfiguration["filePrefix"]?.GetValue<string>();
+            var folder = fileConfiguration["dirName"]?.GetValue<string>();
+            var maxSize = fileConfiguration["maxSize"]?.GetValue<string>() ?? string.Empty;
+            var maxFiles = fileConfiguration["maxFiles"]?.GetValue<int>() ?? 0;
 
             var jsonLayout = new JsonLayout(false);
             var fileAppender = new RollingFileAppender()
@@ -257,7 +257,7 @@ namespace FinalApi.Plumbing.Logging
         private void CreateDebugLoggers(ILoggingBuilder builder, JsonNode config)
         {
             // Set the base log level from configuration
-            var level = this.ReadDebugLogLevel(config["level"].GetValue<string>());
+            var level = this.ReadDebugLogLevel(config["level"]?.GetValue<string>() ?? string.Empty);
             builder.SetMinimumLevel(level);
 
             // Process override levels
@@ -267,7 +267,7 @@ namespace FinalApi.Plumbing.Logging
                 foreach (var overrideLevel in overrideLevels)
                 {
                     var className = overrideLevel.Key;
-                    var classLevel = this.ReadDebugLogLevel(overrideLevel.Value.GetValue<string>());
+                    var classLevel = this.ReadDebugLogLevel(overrideLevel.Value?.GetValue<string>() ?? string.Empty);
                     builder.AddFilter(className, classLevel);
                 }
             }

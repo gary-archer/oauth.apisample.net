@@ -17,7 +17,7 @@ namespace FinalApi.Logic.Claims
         public async Task<ExtraClaims> LookupExtraClaimsAsync(JwtClaims jwtClaims, IServiceProvider serviceProvider)
         {
             // Get an object to look up user information
-            var userRepository = (UserRepository)serviceProvider.GetService(typeof(UserRepository));
+            var userRepository = (serviceProvider.GetService(typeof(UserRepository)) as UserRepository)!;
 
             // Look up values using the manager ID, a business user identity
             var managerId = ClaimsReader.GetStringClaim(jwtClaims, ClaimNames.ManagerId);

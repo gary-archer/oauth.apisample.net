@@ -9,7 +9,7 @@ namespace FinalApi.Plumbing.Errors
      */
     internal static class ErrorResponseReader
     {
-        public static JsonNode ReadJson(string jsonText)
+        public static JsonNode? ReadJson(string jsonText)
         {
             if (jsonText == null || jsonText.Length == 0)
             {
@@ -18,7 +18,7 @@ namespace FinalApi.Plumbing.Errors
 
             try
             {
-                return JsonNode.Parse(jsonText);
+                return JsonNode.Parse(jsonText)!;
             }
             catch (Exception)
             {

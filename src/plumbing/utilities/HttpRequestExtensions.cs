@@ -14,10 +14,10 @@ namespace FinalApi.Plumbing.Utilities
         {
             if (request.Headers != null && request.Headers.ContainsKey(name))
             {
-                return request.Headers[name];
+                return request.Headers[name]!;
             }
 
-            return null;
+            return string.Empty;
         }
     }
 }
