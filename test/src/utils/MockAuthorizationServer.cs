@@ -35,7 +35,7 @@ namespace FinalApi.Test.Utils
             this.tokenSigningPublicKey = new Jwk(this.keypair, false)
             {
                 Alg = algorithm,
-                KeyId = this.keyId
+                KeyId = this.keyId,
             };
         }
 

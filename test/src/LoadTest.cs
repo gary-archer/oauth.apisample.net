@@ -266,8 +266,8 @@ namespace FinalApi.Test
             {
                 var error = JsonSerializer.Deserialize<JsonNode>(response.Body);
                 var receivedErrorCode = error?["code"]?.GetValue<string>();
-                var receivedErrorId = error?["id"]?.GetValue<string>();
-                
+                var receivedErrorId = error?["id"]?.GetValue<int>().ToString();
+
                 if (!string.IsNullOrWhiteSpace(receivedErrorCode))
                 {
                     errorCode = receivedErrorCode;

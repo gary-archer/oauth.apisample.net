@@ -10,7 +10,7 @@ namespace FinalApi.Test.XUnit
     public class SequentialTestMethodOrderer : ITestMethodOrderer
     {
         public IReadOnlyCollection<TTestMethod?> OrderTestMethods<TTestMethod>(IReadOnlyCollection<TTestMethod?> testMethods)
-		    where TTestMethod : notnull, ITestMethod
+            where TTestMethod : notnull, ITestMethod
         {
             return testMethods;
         }

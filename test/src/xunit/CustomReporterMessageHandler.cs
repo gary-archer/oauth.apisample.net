@@ -15,9 +15,9 @@ namespace FinalApi.Test.XUnit
         {
             this.logger = logger;
             this.metadataCache = new MessageMetadataCache();
-            Execution.TestStartingEvent += OnTestStarting;
-            Execution.TestPassedEvent += OnTestPassed;
-            Execution.TestFailedEvent += OnTestFailed;
+            this.Execution.TestStartingEvent += this.OnTestStarting;
+            this.Execution.TestPassedEvent += this.OnTestPassed;
+            this.Execution.TestFailedEvent += this.OnTestFailed;
         }
 
         private void OnTestStarting(MessageHandlerArgs<ITestStarting> args)
@@ -33,7 +33,7 @@ namespace FinalApi.Test.XUnit
             var metadata = this.metadataCache.TryGetTestMetadata(test);
             if (metadata != null)
             {
-                logger.LogMessage($"    {yellow}[test] {green}{metadata.TestDisplayName} PASSED ✓");
+                this.logger.LogMessage($"    {yellow}[test] {green}{metadata.TestDisplayName} PASSED ✓");
             }
         }
 
@@ -45,7 +45,7 @@ namespace FinalApi.Test.XUnit
             var metadata = this.metadataCache.TryGetTestMetadata(test);
             if (metadata != null)
             {
-                logger.LogMessage($"    {yellow}[test] {red}{metadata.TestDisplayName} FAILED ✗: {string.Join(',', test.Messages)}");
+                this.logger.LogMessage($"    {yellow}[test] {red}{metadata.TestDisplayName} FAILED ✗: {string.Join(',', test.Messages)}");
             }
         }
     }
