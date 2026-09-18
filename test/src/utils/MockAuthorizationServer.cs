@@ -62,7 +62,7 @@ namespace FinalApi.Test.Utils
         /*
          * Issue an access token with the supplied subject claim
          */
-        public string IssueAccessToken(MockTokenOptions options, Jwk jwk = null)
+        public string IssueAccessToken(MockTokenOptions options, Jwk? jwk = null)
         {
             var now = DateTimeOffset.Now;
             var exp = now.AddMinutes(options.ExpiryMinutes);

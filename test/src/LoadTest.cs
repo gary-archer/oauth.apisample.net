@@ -265,14 +265,17 @@ namespace FinalApi.Test
             if ((int)response.StatusCode >= 400)
             {
                 var error = JsonSerializer.Deserialize<JsonNode>(response.Body);
-                if (error["code"] != null)
+                var receivedErrorCode = error?["code"]?.GetValue<string>();
+                var receivedErrorId = error?["id"]?.GetValue<string>();
+                
+                if (!string.IsNullOrWhiteSpace(receivedErrorCode))
                 {
-                    errorCode = error["code"].GetValue<string>();
+                    errorCode = receivedErrorCode;
                 }
 
-                if (error["id"] != null)
+                if (!string.IsNullOrWhiteSpace(receivedErrorId))
                 {
-                    errorId = error["id"].GetValue<int>().ToString();
+                    errorCode = receivedErrorId;
                 }
             }
 

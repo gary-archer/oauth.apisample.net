@@ -21,7 +21,7 @@ namespace FinalApi.Test.XUnit
 
         public ValueTask<IRunnerReporterMessageHandler> CreateMessageHandler(
             IRunnerLogger logger,
-            IMessageSink diagnosticMessageSink)
+            IMessageSink? diagnosticMessageSink)
         {
             return new ValueTask<IRunnerReporterMessageHandler>(
                 new CustomReporterMessageHandler(logger)
