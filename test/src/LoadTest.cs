@@ -12,7 +12,7 @@ namespace FinalApi.Test
     /*
      * A basic load test to ensure that the API behaves correctly when there are concurrent requests
      */
-    public class LoadTest : IDisposable
+    public class LoadTest
     {
         // Codes for reliable colours in any terminal
         private static string colorBlue = "\u001B[34m";
@@ -33,11 +33,10 @@ namespace FinalApi.Test
         public LoadTest()
         {
             // Create the mock authorization server, which enables productive API tests
-            var useProxy = false;
-            this.mockAuthorizationServer = new MockAuthorizationServer(useProxy);
-            this.mockAuthorizationServer.Start();
+            this.mockAuthorizationServer = new MockAuthorizationServer();
 
             // Create the API client
+            var useProxy = false;
             var apiBaseUrl = "https://api.authsamples-dev.com:446";
             this.apiClient = new ApiClient(apiBaseUrl, useProxy);
 
@@ -47,15 +46,6 @@ namespace FinalApi.Test
             // Initialise other fields
             this.totalCount = 0;
             this.errorCount = 0;
-        }
-
-        /*
-         * Teardown that runs when the load test has completed
-         */
-        public void Dispose()
-        {
-            this.mockAuthorizationServer.Stop();
-            this.mockAuthorizationServer.Dispose();
         }
 
         /*

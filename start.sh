@@ -7,7 +7,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 #
-# Ensure that the development configuration is used
+# Use a configuration that points to AWS Cognito
 #
 cp deployment/environments/dev/api.config.json ./api.config.json
 

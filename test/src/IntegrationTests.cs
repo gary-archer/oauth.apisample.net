@@ -13,17 +13,17 @@ namespace FinalApi.Test
     /*
      * Test the API in isolation, without any dependencies on the Authorization Server
      */
-    public class IntegrationTests : IClassFixture<IntegrationTestState>
+    public class IntegrationTests : IClassFixture<IntegrationTestFixture>
     {
         // State shared across the suite of tests
-        private readonly IntegrationTestState state;
+        private readonly IntegrationTestFixture fixture;
 
         /*
-         * Initialize mock token issuing and wiremock before a test runs
+         * Initialize mock token issuing before a test runs
          */
-        public IntegrationTests(IntegrationTestState state)
+        public IntegrationTests(IntegrationTestFixture fixture)
         {
-            this.state = state;
+            this.fixture = fixture;
         }
 
         /*
@@ -35,7 +35,7 @@ namespace FinalApi.Test
         {
             // Call the API and ensure a 401 response
             var options = new ApiRequestOptions(string.Empty);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, "Unexpected HTTP status code");
@@ -54,13 +54,13 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
+            jwtOptions.DelegationId = this.fixture.DelegationId;
             jwtOptions.ExpiryMinutes = -30;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API and ensure a 401 response
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, "Unexpected HTTP status code");
@@ -79,13 +79,13 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
+            jwtOptions.DelegationId = this.fixture.DelegationId;
             jwtOptions.Issuer = "https://otherissuer.com";
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API and ensure a 401 response
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, "Unexpected HTTP status code");
@@ -104,13 +104,13 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
+            jwtOptions.DelegationId = this.fixture.DelegationId;
             jwtOptions.Audience = "api.other.com";
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API and ensure a 401 response
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, "Unexpected HTTP status code");
@@ -132,12 +132,12 @@ namespace FinalApi.Test
                 var jwk = new Jwk(keypair, true);
                 var jwtOptions = new MockTokenOptions();
                 jwtOptions.UseStandardUser();
-                jwtOptions.DelegationId = this.state.DelegationId;
-                var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions, jwk);
+                jwtOptions.DelegationId = this.fixture.DelegationId;
+                var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions, jwk);
 
                 // Call the API and ensure a 401 response
                 var options = new ApiRequestOptions(accessToken);
-                var response = await this.state.ApiClient.GetCompanies(options);
+                var response = await this.fixture.ApiClient.GetCompanies(options);
 
                 // Assert expected results
                 Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, "Unexpected HTTP status code");
@@ -157,13 +157,13 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
+            jwtOptions.DelegationId = this.fixture.DelegationId;
             jwtOptions.Scope = "openid profile";
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API and ensure a 401 response
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.Forbidden, "Unexpected HTTP status code");
@@ -182,13 +182,13 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
             options.RehearseException = true;
-            var response = await this.state.ApiClient.GetCompanyTransactions(options, 2);
+            var response = await this.fixture.ApiClient.GetCompanyTransactions(options, 2);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.InternalServerError, "Unexpected HTTP status code");
@@ -207,12 +207,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetUserInfoClaims(options);
+            var response = await this.fixture.ApiClient.GetUserInfoClaims(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.OK, "Unexpected HTTP status code");
@@ -232,12 +232,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseAdminUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetUserInfoClaims(options);
+            var response = await this.fixture.ApiClient.GetUserInfoClaims(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.OK, "Unexpected HTTP status code");
@@ -256,12 +256,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.OK, "Unexpected HTTP status code");
@@ -279,12 +279,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseAdminUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanies(options);
+            var response = await this.fixture.ApiClient.GetCompanies(options);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.OK, "Unexpected HTTP status code");
@@ -302,12 +302,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanyTransactions(options, 2);
+            var response = await this.fixture.ApiClient.GetCompanyTransactions(options, 2);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.OK, "Unexpected HTTP status code");
@@ -326,12 +326,12 @@ namespace FinalApi.Test
             // Get an access token for the end user of this test
             var jwtOptions = new MockTokenOptions();
             jwtOptions.UseStandardUser();
-            jwtOptions.DelegationId = this.state.DelegationId;
-            var accessToken = this.state.MockAuthorizationServer.IssueAccessToken(jwtOptions);
+            jwtOptions.DelegationId = this.fixture.DelegationId;
+            var accessToken = this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions);
 
             // Call the API
             var options = new ApiRequestOptions(accessToken);
-            var response = await this.state.ApiClient.GetCompanyTransactions(options, 3);
+            var response = await this.fixture.ApiClient.GetCompanyTransactions(options, 3);
 
             // Assert expected results
             Assert.True(response.StatusCode == HttpStatusCode.NotFound, "Unexpected HTTP status code");

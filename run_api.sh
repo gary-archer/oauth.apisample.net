@@ -1,8 +1,8 @@
 #!/bin/bash
 
-##################################################
-# A script to run the API in a particular terminal
-##################################################
+#############################
+# Common logic to run the API
+#############################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -17,7 +17,6 @@ rm oauth.apisample.net.sln 2>/dev/null
 dotnet build
 if [ $? -ne 0 ]; then
   echo 'Problem encountered building the API'
-  read -n 1
   exit 1
 fi
 
@@ -41,11 +40,5 @@ fi
 dotnet watch --no-build
 if [ $? -ne 0 ]; then
   echo 'Problem encountered running the API'
-  read -n 1
   exit 1
 fi
-
-#
-# Prevent automatic terminal closure
-#
-read -n 1
