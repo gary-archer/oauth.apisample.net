@@ -57,7 +57,7 @@ namespace FinalApi.Test.Utils
         /*
          * Start the HTTP server
          */
-        public async Task StartAsync()
+        public async ValueTask StartAsync()
         {
             TestContext.Current.SendDiagnosticMessage("*** START HTTP SERVER ***");
             await this.httpServer.StartAsync();
