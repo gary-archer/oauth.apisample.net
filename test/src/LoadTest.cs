@@ -12,7 +12,7 @@ namespace FinalApi.Test
     /*
      * A basic load test to ensure that the API behaves correctly when there are concurrent requests
      */
-    public class LoadTest
+    public class LoadTest : IClassFixture<OAuthTestFixture>
     {
         // Codes for reliable colours in any terminal
         private static string colorBlue = "\u001B[34m";
@@ -20,20 +20,21 @@ namespace FinalApi.Test
         private static string colorRed = "\u001B[31m";
         private static string colorYellow = "\u001B[33m";
 
+        // Test fixture state
+        private readonly OAuthTestFixture fixture;
+
         // Private class members
-        private readonly MockAuthorizationServer mockAuthorizationServer;
         private readonly ApiClient apiClient;
         private readonly string delegationId;
         private int totalCount;
         private int errorCount;
 
         /*
-         * Setup that runs at the start of the test run
+         * Initialize mock token issuing before a test runs
          */
-        public LoadTest()
+        public LoadTest(OAuthTestFixture fixture)
         {
-            // Create the mock authorization server, which enables productive API tests
-            this.mockAuthorizationServer = new MockAuthorizationServer();
+            this.fixture = fixture;
 
             // Create the API client
             var useProxy = false;
@@ -53,7 +54,7 @@ namespace FinalApi.Test
          */
         [Fact]
         [Trait("Category", "Load")]
-        public void Run()
+        public void RunLoadTest()
         {
             // Show a startup message
             Console.WriteLine();
@@ -99,7 +100,7 @@ namespace FinalApi.Test
             var tokens = new List<string>();
             for (int index = 0; index < 5; index++)
             {
-                tokens.Add(this.mockAuthorizationServer.IssueAccessToken(jwtOptions));
+                tokens.Add(this.fixture.MockAuthorizationServer.IssueAccessToken(jwtOptions));
             }
 
             return tokens;
@@ -265,7 +266,7 @@ namespace FinalApi.Test
 
                 if (!string.IsNullOrWhiteSpace(receivedErrorId))
                 {
-                    errorCode = receivedErrorId;
+                    errorId = receivedErrorId;
                 }
             }
 

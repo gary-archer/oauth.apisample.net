@@ -1,5 +1,6 @@
 namespace FinalApi.Test.XUnit
 {
+    using System.Linq;
     using Xunit.Runner.Common;
     using Xunit.Sdk;
 
@@ -27,13 +28,16 @@ namespace FinalApi.Test.XUnit
 
         private void OnTestPassed(MessageHandlerArgs<ITestPassed> args)
         {
-            var yellow = "\u001b[93m";
-            var green = "\u001b[32m";
             var test = args.Message;
             var metadata = this.metadataCache.TryGetTestMetadata(test);
-            if (metadata != null)
+            if (metadata != null && metadata.TestDisplayName != "RunLoadTest")
             {
-                this.logger.LogMessage($"    {yellow}[test] {green}{metadata.TestDisplayName} PASSED ✓");
+                var yellow = "\u001b[93m";
+                var green = "\u001b[32m";
+                if (metadata != null)
+                {
+                    this.logger.LogMessage($"    {yellow}[test] {green}{metadata.TestDisplayName} PASSED ✓");
+                }
             }
         }
 

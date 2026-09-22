@@ -4,13 +4,12 @@ namespace FinalApi.Test.Utils
     using System.Collections.Generic;
     using System.Net;
     using System.Security.Cryptography;
-    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Xunit;
+    using Microsoft.Extensions.Logging;
 
     /*
      * A mock authorization server implemented with an HTTPS server and a JOSE library
@@ -40,6 +39,7 @@ namespace FinalApi.Test.Utils
             var keysJson = keyset.ToJson(JWT.DefaultSettings.JsonMapper);
 
             var builder = WebApplication.CreateBuilder();
+            builder.Logging.ClearProviders();
             builder.WebHost
                 .UseKestrel(options =>
                 {
@@ -59,9 +59,7 @@ namespace FinalApi.Test.Utils
          */
         public async Task StartAsync()
         {
-            TestContext.Current.SendDiagnosticMessage("*** START HTTP SERVER ***");
             await this.httpServer.StartAsync();
-            TestContext.Current.SendDiagnosticMessage("*** STARTED HTTP SERVER ***");
         }
 
         /*

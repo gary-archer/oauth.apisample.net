@@ -40,7 +40,7 @@
         /*
          * Build an application to handle OAuth requests over HTTP
          */
-        private static WebApplication CreateApi(Plumbing.Logging.ILoggerFactory loggerFactory)
+        private static WebApplication CreateApi(ILoggerFactory loggerFactory)
         {
             // Load the configuration file
             var configuration = Configuration.LoadAsync("./api.config.json").Result;

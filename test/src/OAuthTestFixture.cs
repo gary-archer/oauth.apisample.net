@@ -8,12 +8,12 @@ namespace FinalApi.Test
     /*
      * The fixture contains state during a test run
      */
-    public class IntegrationTestFixture : IAsyncLifetime
+    public class OAuthTestFixture : IAsyncLifetime
     {
         /*
          * Create infrastructure resources once, when the test run begins
          */
-        public IntegrationTestFixture()
+        public OAuthTestFixture()
         {
             // Create the mock authorization server
             this.MockAuthorizationServer = new MockAuthorizationServer();

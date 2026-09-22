@@ -13,15 +13,15 @@ namespace FinalApi.Test
     /*
      * Test the API in isolation, without any dependencies on the Authorization Server
      */
-    public class IntegrationTests : IClassFixture<IntegrationTestFixture>
+    public class IntegrationTests : IClassFixture<OAuthTestFixture>
     {
         // State shared across the suite of tests
-        private readonly IntegrationTestFixture fixture;
+        private readonly OAuthTestFixture fixture;
 
         /*
          * Initialize mock token issuing before a test runs
          */
-        public IntegrationTests(IntegrationTestFixture fixture)
+        public IntegrationTests(OAuthTestFixture fixture)
         {
             this.fixture = fixture;
         }
