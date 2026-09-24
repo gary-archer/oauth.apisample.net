@@ -26,6 +26,7 @@ namespace FinalApi.Test
         // Private class members
         private readonly ApiClient apiClient;
         private readonly string delegationId;
+        private int numApiRequests;
         private int totalCount;
         private int errorCount;
 
@@ -45,6 +46,7 @@ namespace FinalApi.Test
             this.delegationId = Guid.NewGuid().ToString();
 
             // Initialise other fields
+            this.numApiRequests = 100;
             this.totalCount = 0;
             this.errorCount = 0;
         }
@@ -86,6 +88,10 @@ namespace FinalApi.Test
                 colorBlue,
                 $"Load test session {this.delegationId} completed in {timeTaken} milliseconds: {this.errorCount} errors from {this.totalCount} requests");
             Console.WriteLine();
+
+            // Assert expected results
+            Assert.True(this.totalCount == this.numApiRequests);
+            Assert.True(this.errorCount == 3);
         }
 
         /*
@@ -113,7 +119,7 @@ namespace FinalApi.Test
         {
             // Next produce some requests that will run in parallel
             var requests = new List<Func<Task<ApiResponse>>>();
-            for (var index = 0; index < 100; index++)
+            for (var index = 0; index < this.numApiRequests; index++)
             {
                 // Get the access token
                 var accessToken = accessTokens[index % 5];
