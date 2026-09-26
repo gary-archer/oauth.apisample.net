@@ -2,31 +2,28 @@ namespace FinalApi.Test.Utils
 {
     using System;
     using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
+    using System.Net;
     using System.Security.Cryptography;
-    using System.Text;
-    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
 
     /*
-     * A mock authorization server implemented with wiremock and a JOSE library
+     * A mock authorization server implemented with an HTTPS server and a JOSE library
      */
-    public class MockAuthorizationServer : IDisposable
+    public class MockAuthorizationServer
     {
-        private readonly string adminBaseUrl;
-        private readonly HttpProxy httpProxy;
+        private readonly WebApplication httpServer;
         private readonly ECDsa keypair;
         private readonly Jwk tokenSigningPrivateKey;
         private readonly Jwk tokenSigningPublicKey;
         private readonly string keyId;
 
-        public MockAuthorizationServer(bool useProxy)
+        public MockAuthorizationServer()
         {
-            this.adminBaseUrl = "https://login.authsamples-dev.com:447/__admin/mappings";
-            this.httpProxy = new HttpProxy(useProxy, "http://127.0.0.1:8888");
-
             var algorithm = "ES256";
             this.keypair = ECDsa.Create(ECCurve.NamedCurves.nistP256);
             this.keyId = Guid.NewGuid().ToString();
@@ -37,26 +34,42 @@ namespace FinalApi.Test.Utils
                 Alg = algorithm,
                 KeyId = this.keyId,
             };
-        }
 
-        public void Start()
-        {
-            var keyset = this.GetTokenSigningPublicKeys();
-            this.RegisterJsonWebWeys(keyset).Wait();
-        }
+            var keyset = new JwkSet(this.tokenSigningPublicKey);
+            var keysJson = keyset.ToJson(JWT.DefaultSettings.JsonMapper);
 
-        public void Stop()
-        {
-            this.UnregisterJsonWebWeys().Wait();
+            var builder = WebApplication.CreateBuilder();
+            builder.Logging.ClearProviders();
+            builder.WebHost
+                .UseKestrel(options =>
+                {
+                    options.Listen(IPAddress.Loopback, 447, listenOptions =>
+                    {
+                        listenOptions.UseHttps("../../../../certs/authsamples-dev.ssl.p12", "Password1");
+                    });
+                });
+
+            this.httpServer = builder.Build();
+            this.httpServer.MapGet("/.well-known/jwks.json", () =>
+                Results.Content(keysJson, contentType: "application/json"));
         }
 
         /*
-         * Get the token signing public keys as a JSON Web Keyset
+         * Start the HTTP server
          */
-        public string GetTokenSigningPublicKeys()
+        public async ValueTask StartAsync()
         {
-            var keyset = new JwkSet(this.tokenSigningPublicKey);
-            return keyset.ToJson(JWT.DefaultSettings.JsonMapper);
+            await this.httpServer.StartAsync();
+        }
+
+        /*
+         * Stop the HTTP server and free resources
+         */
+        public async ValueTask DisposeAsync()
+        {
+            await this.httpServer.StopAsync();
+            await this.httpServer.DisposeAsync();
+            this.keypair.Dispose();
         }
 
         /*
@@ -87,79 +100,6 @@ namespace FinalApi.Test.Utils
 
             var jwkToUse = jwk ?? this.tokenSigningPrivateKey;
             return JWT.Encode(payload, jwkToUse, JwsAlgorithm.ES256, headers);
-        }
-
-        /*
-         * Dispose the internal key
-         */
-        public void Dispose()
-        {
-            this.keypair.Dispose();
-        }
-
-        /*
-         * Register our test JWKS values at the start of the test suite
-         */
-        private async Task RegisterJsonWebWeys(string keysJson)
-        {
-            var data = new JsonObject
-            {
-                ["id"] = this.keyId,
-                ["priority"] = 1,
-                ["request"] = new JsonObject
-                {
-                    ["method"] = "GET",
-                    ["url"] = "/.well-known/jwks.json",
-                },
-                ["response"] = new JsonObject
-                {
-                    ["status"] = 200,
-                    ["body"] = keysJson,
-                },
-            };
-
-            await this.Register(data.ToJsonString());
-        }
-
-        /*
-         * Unregister our test JWKS values at the end of the test suite
-         */
-        private async Task UnregisterJsonWebWeys()
-        {
-            await this.Unregister(this.keyId);
-        }
-
-        /*
-         * Add a stubbed response to Wiremock via its Admin API
-         */
-        private async Task Register(string stubbedResponse)
-        {
-            using (var client = new HttpClient(this.httpProxy.GetHandler()))
-            {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var request = new HttpRequestMessage(HttpMethod.Post, this.adminBaseUrl);
-                request.Content = new StringContent(stubbedResponse, Encoding.UTF8, "application/json");
-
-                var response = await client.SendAsync(request);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var status = (int)response.StatusCode;
-                    var text = await response.Content.ReadAsStringAsync();
-                    throw new InvalidOperationException($"Register call failed: {status} {text}");
-                }
-            }
-        }
-
-        /*
-         * Delete a stubbed response from Wiremock via its Admin API
-         */
-        private async Task Unregister(string id)
-        {
-            using (var client = new HttpClient(this.httpProxy.GetHandler()))
-            {
-                var request = new HttpRequestMessage(HttpMethod.Delete, $"{this.adminBaseUrl}/{id}");
-                await client.SendAsync(request);
-            }
         }
     }
 }
