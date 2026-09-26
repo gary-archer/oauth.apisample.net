@@ -213,12 +213,13 @@ namespace FinalApi.Test
             while (current < total)
             {
                 // Get a batch of requests
-                var requestBatch = requests.GetRange(current, Math.Min(batchSize, total - current));
+                var end = Math.Min(batchSize, total - current);
+                var requestBatch = requests.GetRange(current, end);
 
                 // Execute them to create promises
                 var batchTasks = requestBatch.Select((r) => this.ExecuteApiRequest(r));
 
-                // Wait for the batch to complete
+                // Wait for all requests in the batch to complete
                 Task.WaitAll(batchTasks.ToArray());
                 current += batchSize;
             }
