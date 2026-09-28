@@ -43,7 +43,7 @@ namespace FinalApi.Test.Utils
             builder.WebHost
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Loopback, 447, listenOptions =>
+                    options.Listen(IPAddress.Any, 447, listenOptions =>
                     {
                         listenOptions.UseHttps("../../../../certs/authsamples-dev.ssl.p12", "Password1");
                     });
