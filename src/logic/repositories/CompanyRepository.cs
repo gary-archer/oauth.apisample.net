@@ -4,8 +4,8 @@ namespace FinalApi.Logic.Repositories
     using System.Linq;
     using System.Threading.Tasks;
     using FinalApi.Logic.Entities;
-    using FinalApi.Logic.Utilities;
-    using FinalApi.Plumbing.Logging;
+    using FinalApi.Middleware.Logging;
+    using FinalApi.Utilities;
 
     /*
      * A repository class for serving data

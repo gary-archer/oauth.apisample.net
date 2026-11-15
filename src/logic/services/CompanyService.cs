@@ -5,10 +5,9 @@ namespace FinalApi.Logic.Services
     using System.Net;
     using System.Threading.Tasks;
     using FinalApi.Logic.Entities;
-    using FinalApi.Logic.Errors;
     using FinalApi.Logic.Repositories;
-    using FinalApi.Plumbing.Claims;
-    using FinalApi.Plumbing.Errors;
+    using FinalApi.Middleware.Claims;
+    using FinalApi.Middleware.Errors;
 
     /*
      * The entry point to service logic

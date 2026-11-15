@@ -1,6 +1,6 @@
 namespace FinalApi.Logic.Repositories
 {
-    using FinalApi.Plumbing.Claims;
+    using FinalApi.Middleware.Claims;
 
     /*
      * A repository that returns hard coded data, whereas a real implementation would use a database lookup

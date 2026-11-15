@@ -43,8 +43,8 @@
         "level": "Info",
         "overrideLevels": {
           "Microsoft.AspNetCore": "Error",
-          "FinalApi.Plumbing.Middleware.CustomAuthenticationHandler": "Error",
-          "FinalApi.Plumbing.Claims.ClaimsCache": "Info"
+          "FinalApi.Middleware.Middleware.CustomAuthenticationHandler": "Error",
+          "FinalApi.Middleware.Claims.ClaimsCache": "Info"
         }
       }
     ]
