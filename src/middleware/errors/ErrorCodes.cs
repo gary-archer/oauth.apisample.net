@@ -1,7 +1,7 @@
 ﻿namespace FinalApi.Middleware.Errors
 {
     /*
-     * Error codes specific to the API logic
+     * Error codes to represent error causes
      */
     public static class ErrorCodes
     {
